@@ -50,7 +50,8 @@ class Predictions extends Component {
         },
             {
                 dataField: 'pred',
-                text: 'Preditcion',
+                text: 'Prediction',
+                sort: true,
                 filter: textFilter(),
             }, {
                 dataField: 'action_date',
@@ -94,8 +95,9 @@ class Predictions extends Component {
                 <BootstrapTable
                     filter = { filterFactory() }
                     striped
+                    bootstrap4 = {true}
                     hover
-                    keyField='uid'
+                    keyField='pid'
                     data={ this.state.posts }
                     columns={ this.state.columns } >
                 </BootstrapTable>
