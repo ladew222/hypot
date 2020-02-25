@@ -1,9 +1,31 @@
 import React, { Component } from 'react';
-//import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap-table-next';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
+import Dialog from 'react-bootstrap-table-next';
+import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+
 import axios from "axios";
 
+function rankFormatter(cell, row, rowIndex, formatExtraData) {
+    return (
+        < div id={`${row.uid}-dropdown`}
+            style={{ textAlign: "center",
+                cursor: "pointer",
+                lineHeight: "normal" }}>
+            <a href={`visits/${row.uid}`} >{row.uid} </a>
+            < div
+                style={{ fontSize: 20 }}
+                color="disabled"
+            />
+        </div>
+    ); }
+
+
+
 class Predictions extends Component {
+
     state = {
         products: [
             {
@@ -23,18 +45,28 @@ class Predictions extends Component {
             },
         ],
         columns: [{
-            dataField: 'pid',
-            text: 'PID'
+            dataField: 'uid',
+            text: 'UID'
         },
             {
                 dataField: 'pred',
-                text: 'Predicion'
+                text: 'Preditcion',
+                filter: textFilter(),
             }, {
                 dataField: 'action_date',
                 text: 'date',
-                sort: true
-            }]
+                sort: true,
+            },
+            {
+                dataField: 'actions',
+                isDummyField: true,
+                text: 'active',
+                formatter: rankFormatter,
+                sort: false,
+            }
+            ]
     }
+
 
     componentDidMount() {
         axios.get(`http://localhost:3000/api/predictions`)
@@ -60,11 +92,13 @@ class Predictions extends Component {
         return (
             <div className="container" style={{ marginTop: 50 }}>
                 <BootstrapTable
+                    filter = { filterFactory() }
                     striped
                     hover
-                    keyField='id'
+                    keyField='uid'
                     data={ this.state.posts }
-                    columns={ this.state.columns } />
+                    columns={ this.state.columns } >
+                </BootstrapTable>
             </div>
         );
 
