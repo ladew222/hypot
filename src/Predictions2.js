@@ -5,10 +5,9 @@ import Table from "./Table";
 import "./App.css";
 
 fetchPhotos() {  //call api from drupal to get slides, stores in photos
-  var randomstring = require("randomstring");
-  randomstring.generate(7);
+
   request
-      .get(this.server_name + this.monitor +'?'+ randomstring.generate(4))
+      .get('http://localhost:3000/api/predictions')
       .then((res) => {
         this.setState({
           photos: res.body
@@ -18,7 +17,7 @@ fetchPhotos() {  //call api from drupal to get slides, stores in photos
 
 
 function App() {
-  this.columns = (
+  this.columns = React.useMemo(
     () => [
       {
         Header: "TV Show",
@@ -48,7 +47,7 @@ function App() {
   useEffect(() => {
     (async () => {
       const result = await axios("http://localhost:3000/api/predictions");
-      setData(result.data.response);
+      setData(result.response);
     })();
   }, []);
 
