@@ -5,6 +5,7 @@ import request from 'superagent';
 import Predictions from "./Predictions";
 import Views from "./views";
 import Actions from "./actions";
+import Campaigns from "./campaigns";
 
 
 
@@ -64,11 +65,13 @@ class App extends Component {
                     <li><Link to="/actions">Actions</Link></li>
                     <li><Link to="/predictions">Predictions</Link></li>
                     <li><Link to="/views">Views</Link></li>
+                    <li><Link to="/campaigns">Campaigns</Link></li>
 
                 </ul>
                 <Route path="/actions/:uid?" component={Actions}/>
                 <Route path="/predictions/:uid?" component={Predictions}/>
                 <Route path="/views/:uid?" component={Views}/>
+                <Route path="/campaigns/:uid?" component={Campaigns}/>
             </div>
         );
     }
