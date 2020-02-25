@@ -14,7 +14,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
             style={{ textAlign: "center",
                 cursor: "pointer",
                 lineHeight: "normal" }}>
-            <a href={`visits/${row.uid}`} >Views </a>
+            <a href={`/views/${row.uid}`} >{row.uid} </a>
             < div
                 style={{ fontSize: 20 }}
                 color="disabled"
@@ -24,7 +24,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
 
 
 
-class Predictions extends Component {
+class Views extends Component {
 
     state = {
         products: [
@@ -49,40 +49,32 @@ class Predictions extends Component {
             text: 'UID'
         },
             {
-                dataField: 'pred',
-                text: 'Prediction',
+                dataField: 'title',
+                text: 'Title',
                 sort: true,
                 filter: textFilter(),
-            },
-            {
-                dataField: 'action_date',
+            }, {
+                dataField: 'view_date',
                 text: 'date',
                 sort: true,
             },
             {
-                dataField: 'pages',
-                text: 'pages',
-                sort: false,
-            },
-            {
-                dataField: 'actions',
+                dataField: 'path1',
                 isDummyField: true,
-                text: 'Views',
+                text: 'other pages',
                 formatter: rankFormatter,
                 sort: false,
             }
             ]
     }
-
-
     componentDidMount() {
         var getstr = "";
         const { params } = this.props.match;
         if (params.uid){
-            getstr="http://localhost:3000/api/predictions/"+params.uid;
+            getstr="http://localhost:3000/api/views/"+params.uid;
         }
         else{
-            getstr="http://localhost:3000/api/predictions/";
+            getstr="http://localhost:3000/api/views/";
         }
         axios.get(getstr)
             .then(res => {
@@ -90,7 +82,6 @@ class Predictions extends Component {
                 this.setState({ posts });
             });
     }
-
 
     render() {
 
@@ -122,5 +113,5 @@ class Predictions extends Component {
     }
 }
 
-export default Predictions;
+export default Views;
 

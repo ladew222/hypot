@@ -3,7 +3,8 @@ import { Route, Link } from 'react-router-dom';
 import './App.css';
 import request from 'superagent';
 import Predictions from "./Predictions";
-
+import Views from "./views";
+import Actions from "./actions";
 
 
 
@@ -60,14 +61,14 @@ class App extends Component {
         return (
             <div>
                 <ul>
-                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/actions">Actions</Link></li>
                     <li><Link to="/predictions">Predictions</Link></li>
-                    <li><Link to="/cities">Cities</Link></li>
-                </ul>
+                    <li><Link to="/views">Views</Link></li>
 
-                <Route path="/" component={Home}/>
-                <Route path="/predictions" component={Predictions}/>
-                <Route path="/cities" component={City}/>
+                </ul>
+                <Route path="/actions/:uid?" component={Actions}/>
+                <Route path="/predictions/:uid?" component={Predictions}/>
+                <Route path="/views/:uid?" component={Views}/>
             </div>
         );
     }

@@ -14,7 +14,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
             style={{ textAlign: "center",
                 cursor: "pointer",
                 lineHeight: "normal" }}>
-            <a href={`visits/${row.uid}`} >Views </a>
+            <a href={`/views/${row.uid}`} >Pages Viewed </a>
             < div
                 style={{ fontSize: 20 }}
                 color="disabled"
@@ -22,9 +22,21 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
         </div>
     ); }
 
+function rankFormatter2(cell, row, rowIndex, formatExtraData) {
+    return (
+        < div id={`${row.uid}-dropdown`}
+              style={{ textAlign: "center",
+                  cursor: "pointer",
+                  lineHeight: "normal" }}>
+            <a href={`/predictions/${row.uid}`} >Predictions </a>
+            < div
+                style={{ fontSize: 20 }}
+                color="disabled"
+            />
+        </div>
+    ); }
 
-
-class Predictions extends Component {
+class Actions extends Component {
 
     state = {
         products: [
@@ -49,26 +61,29 @@ class Predictions extends Component {
             text: 'UID'
         },
             {
-                dataField: 'pred',
-                text: 'Prediction',
+                dataField: 'title',
+                text: 'Title',
                 sort: true,
                 filter: textFilter(),
             },
+
             {
-                dataField: 'action_date',
-                text: 'date',
+                dataField: 'action',
+                text: 'action',
                 sort: true,
-            },
-            {
-                dataField: 'pages',
-                text: 'pages',
-                sort: false,
             },
             {
                 dataField: 'actions',
                 isDummyField: true,
                 text: 'Views',
                 formatter: rankFormatter,
+                sort: false,
+            },
+            {
+                dataField: 'actions2',
+                isDummyField: true,
+                text: 'Predictions',
+                formatter: rankFormatter2,
                 sort: false,
             }
             ]
@@ -79,10 +94,10 @@ class Predictions extends Component {
         var getstr = "";
         const { params } = this.props.match;
         if (params.uid){
-            getstr="http://localhost:3000/api/predictions/"+params.uid;
+            getstr="http://localhost:3000/api/actions/"+params.uid;
         }
         else{
-            getstr="http://localhost:3000/api/predictions/";
+            getstr="http://localhost:3000/api/actions/";
         }
         axios.get(getstr)
             .then(res => {
@@ -112,7 +127,7 @@ class Predictions extends Component {
                     filterPosition="top"
                     bootstrap4 = {true}
                     hover
-                    keyField='pid'
+                    keyField='action_id'
                     data={ this.state.posts }
                     columns={ this.state.columns } >
                 </BootstrapTable>
@@ -122,5 +137,5 @@ class Predictions extends Component {
     }
 }
 
-export default Predictions;
+export default Actions;
 
