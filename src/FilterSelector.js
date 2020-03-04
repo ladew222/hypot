@@ -9,7 +9,11 @@ let filter ="";
 class DynamicSelect extends Component{
     constructor(props){
         super(props);
-        this.state = { toggleActive: false };
+        this.state = {
+            toggleActive: false,
+            advanced_filter: 'all'
+
+        };
         //this.onToggle = this.onToggle.bind(this);
     }
 
@@ -41,11 +45,11 @@ class DynamicSelect extends Component{
     }
     onSubmit = () =>
     {
-        this.props.onSelectChange(this.state.filter_text, this.state.filter_type,this.state.toggleActive);
+        this.props.onSelectChange(this.state.filter_text, this.state.filter_type,this.state.toggleActive, this.state.advanced_filter);
     }
-    handleAFilterChange = (event) => {
-        const fieldName = event.target.name;
-        const fieldValue = event.target.value;
+    handleAFilterChange = (value) => {
+        const fieldName = "advanced_filter";
+        const fieldValue = value;
         this.setState({[fieldName]: fieldValue});
     }
 
@@ -80,7 +84,7 @@ class DynamicSelect extends Component{
                             </div>
                         </div>
                         <div className="col-lg-3">
-                                 <AutoComplete name="filter_text" end_date={this.props.end_date} start_date={this.props.start_date} onSubmit={this.onChange_autocomplete.bind(this)}  />
+                                 <AutoComplete name="filter_text" use={this.state.toggleActive} end_date={this.props.end_date} start_date={this.props.start_date} onSubmit={this.onChange_autocomplete.bind(this)}  />
 
                         </div>
                         <div className="col-lg-3">
@@ -96,12 +100,12 @@ class DynamicSelect extends Component{
                         </div>
                         <div className="col-lg-3">
                             <span>     </span>
-                            <label htmlFor='genre'>Favorite genre of music</label>
+
                             <ToggleButtonGroup
                                 type='radio'
                                 name='genre'
                                 defaultValue={['all']}
-                                onChange={this.onChange.bind(this)}
+                                onChange={this.handleAFilterChange}
                             >
                                 <ToggleButton value={'all'}>All</ToggleButton>
                                 <ToggleButton value={'converters'}>Converters</ToggleButton>

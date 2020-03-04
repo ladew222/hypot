@@ -8,6 +8,10 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import DynamicSelect from "./FilterSelector";
 import axios from "axios";
 import AutoComplete from "./AutoComplete";
+import { usePromiseTracker } from "react-promise-tracker";
+import LoadSpinner from "./loading";
+import paginationFactory from "react-bootstrap-table2-paginator";
+
 
 function rankFormatter(cell, row, rowIndex, formatExtraData) {
     return (
@@ -109,7 +113,7 @@ class Campaigns extends Component {
             }
             ]
     }
-    handleSelectChange = (filter_txt, filter_typ, filter_mode) =>{
+    handleSelectChange = (filter_txt, filter_typ, filter_mode,filter_advanced) =>{
         /*this.setState({
             selectedValue: selectedValue
         });*/
@@ -123,13 +127,16 @@ class Campaigns extends Component {
              switch(filter_typ) {
                  case 'content':
                      console.log('field4');
-                     if (filter_mode==false){
-                         getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
+                     switch(filter_advanced) {
+                         case 'all':
+                             getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
+                             break;
+                         case 'converters':
+                             getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
+                             break;
+                         default:
+                         // code block
                      }
-                     else{
-                         getstr="http://localhost:3000/api/campaigns_content_ex/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
-                     }
-
                      console.log(getstr);
                      break;
                  case 'source':
@@ -146,11 +153,14 @@ class Campaigns extends Component {
                      break;
 
              }
-             axios.get(getstr)
-                 .then(res => {
-                     const posts = res.data.response;
-                     this.setState({ posts });
-                 });
+             this.setState({ loading: true }, () => {
+                 axios.get(getstr)
+                     .then(result => this.setState({
+                         loading: false,
+                         posts: result.data.response,
+                     }));
+             });
+
          }
 
 
@@ -165,6 +175,8 @@ class Campaigns extends Component {
         else{
             getstr="http://localhost:3000/api/campaigns/";
         }*/
+
+
         getstr="http://localhost:3000/api/campaigns/";
         axios.get(getstr)
             .then(res => {
@@ -174,8 +186,10 @@ class Campaigns extends Component {
     }
 
     render() {
+        const { posts, loading } = this.state;
 
-        if ( !this.state.posts) {
+
+        if( !this.state.posts) {
             // Note that you can return false it you want nothing to be put in the dom
             // This is also your chance to render a spinner or something...
             return <div>The responsive it not here yet!</div>
@@ -184,25 +198,38 @@ class Campaigns extends Component {
         if ( this.state.posts.length === 0 ) {
             return <div>No result found </div>;
         }
+         else{
 
-        return (
-            <div>
-                <DynamicSelect arrayOfData={arrayOfData} start_date={this.props.state.start_date} end_date={this.props.state.end_date} onSelectChange={this.handleSelectChange} />
-            <div className="container" style={{ marginTop: 50 }}>
-                <span className="badge badge-default">{this.state.posts.length} Records</span>
-                <BootstrapTable
-                    filter = { filterFactory() }
-                    striped
-                    filterPosition="top"
-                    bootstrap4 = {true}
-                    hover
-                    keyField='pid'
-                    data={ this.state.posts }
-                    columns={ this.state.columns } >
-                </BootstrapTable>
-            </div>
-            </div>
-        );
+            return (
+                <div>
+                    <DynamicSelect arrayOfData={arrayOfData} start_date={this.props.state.start_date} end_date={this.props.state.end_date} onSelectChange={this.handleSelectChange} />
+                    {loading ? (
+                        <LoadSpinner />
+                    ) : (
+                        <div className="container" style={{ marginTop: 50 }}>
+                            <span className="badge badge-default">{this.state.posts.length} Records</span>
+                            <BootstrapTable
+                                filter = { filterFactory() }
+                                striped
+                                filterPosition="top"
+                                bootstrap4 = {true}
+                                hover
+                                keyField='pid'
+                                data={ this.state.posts }
+                                columns={ this.state.columns }
+                                pagination={paginationFactory({})}
+                            >
+                            </BootstrapTable>
+                        </div>
+
+                    )}
+                </div>
+
+
+
+
+            );
+         }
 
     }
 }

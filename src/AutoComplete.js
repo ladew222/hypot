@@ -42,23 +42,25 @@ class AutoComplete extends React.Component {
 
 
 onSuggestionsFetchRequested = ({ value }) => {
-    axios
-        .get('http://localhost:3000/api/dist_content/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value, {
-            query: {
-                multi_match: {
-                    query: value,
-                    fields: ['content']
-                }
-            },
+      if(this.props.use==true){
+        axios
+            .get('http://localhost:3000/api/dist_content/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value, {
+                query: {
+                    multi_match: {
+                        query: value,
+                        fields: ['content']
+                    }
+                },
 
-        })
-        .then(res => {
-            console.log(res );
-            //const results = res.data.response;
-            const results = res.data.response.map(h => h.content)
-            //const results = res.data.hits.hits.map(h => h.content)
-            this.setState({ suggestions: results })
-        })
+            })
+            .then(res => {
+                console.log(res );
+                //const results = res.data.response;
+                const results = res.data.response.map(h => h.content)
+                //const results = res.data.hits.hits.map(h => h.content)
+                this.setState({ suggestions: results })
+            })
+      }
 }
 
   onSuggestionsClearRequested = () => {
