@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, useContext  } from 'react';
 import { Button } from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Dialog from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import { ColorContext } from './ColorContext';
 
 import axios from "axios";
+
 
 function rankFormatter(cell, row, rowIndex, formatExtraData) {
     return (
@@ -14,7 +16,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
             style={{ textAlign: "center",
                 cursor: "pointer",
                 lineHeight: "normal" }}>
-            <a href={`visits/${row.uid}`} >{row.uid} </a>
+            <a href={`/views/${row.uid}`} >{row.uid} </a>
             < div
                 style={{ fontSize: 20 }}
                 color="disabled"
@@ -24,7 +26,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
 
 
 
-class Views extends Component {
+class Predictions extends Component {
 
     state = {
         products: [
@@ -49,34 +51,49 @@ class Views extends Component {
             text: 'UID'
         },
             {
-                dataField: 'title',
-                text: 'Title',
+                dataField: 'pred',
+                text: 'Prediction',
                 sort: true,
                 filter: textFilter(),
-            }, {
-                dataField: 'view_date',
+            },
+            {
+                dataField: 'action_date',
                 text: 'date',
                 sort: true,
             },
             {
-                dataField: 'path1',
+                dataField: 'pages',
+                text: 'pages',
+                sort: false,
+            },
+            {
+                dataField: 'actions',
                 isDummyField: true,
-                text: 'path',
+                text: 'Views',
                 formatter: rankFormatter,
                 sort: false,
             }
-            ]
+        ]
     }
-
-
     componentDidMount() {
-        axios.get(`http://localhost:3000/api/views`)
+        //const user = useContext(UserContext);
+        //console.log(user.name);
+        let context = this.context;
+        this.context ="eeee";
+        var getstr = "";
+        const { params } = this.props.match;
+        if (params.uid){
+            getstr="http://localhost:3000/api/predictions//"+params.uid;
+        }
+        else{
+            getstr="http://localhost:3000/api/predictions/";
+        }
+        axios.get(getstr)
             .then(res => {
                 const posts = res.data.response;
                 this.setState({ posts });
             });
     }
-
 
     render() {
 
@@ -107,6 +124,6 @@ class Views extends Component {
 
     }
 }
-
-export default Views;
+Predictions.contextType = ColorContext;
+export default Predictions;
 

@@ -1,4 +1,4 @@
-import React, { Component, useContext  } from 'react';
+import React, { Component } from 'react';
 import { Button } from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -6,7 +6,27 @@ import Dialog from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import axios from "axios";
+import DynamicSelect from "./FilterSelector";
 
+
+const arrayOfData = [
+    {
+        id: '1 - Jerry',
+        name: 'Jerry'
+    },
+    {
+        id: '2 - Elaine',
+        name: 'Elaine'
+    },
+    {
+        id: '3 - Kramer',
+        name: 'Kramer'
+    },
+    {
+        id: '4 - George',
+        name: 'George'
+    },
+];
 
 function rankFormatter(cell, row, rowIndex, formatExtraData) {
     return (
@@ -14,7 +34,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
             style={{ textAlign: "center",
                 cursor: "pointer",
                 lineHeight: "normal" }}>
-            <a href={`/views/${row.uid}`} >{row.uid} </a>
+            <a href={`/campaigns_content/${row.content}`} >{row.content} </a>
             < div
                 style={{ fontSize: 20 }}
                 color="disabled"
@@ -24,46 +44,69 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
 
 
 
-class Views extends Component {
+class Campaigns_content extends Component {
 
     state = {
-
+        products: [
+            {
+                pid: 1,
+                pred: 'grad',
+                'action_date': 1000
+            },
+            {
+                pid: 2,
+                pred: 'grad',
+                'action_date': 1000
+            },
+            {
+                pid: 4,
+                pred: 'grad',
+                'action_date': 1400
+            },
+        ],
         columns: [{
             dataField: 'uid',
             text: 'UID'
         },
             {
                 dataField: 'title',
-                text: 'Title',
+                text: 'Content',
                 sort: true,
                 filter: textFilter(),
-            }, {
+            },
+            {
                 dataField: 'view_date',
+                text: 'view date',
+                sort: true,
+                filter: textFilter(),
+            },
+            {
+                dataField: 'source',
                 text: 'date',
                 sort: true,
             },
             {
-                dataField: 'path1',
+                dataField: 'medium',
+                text: 'medium',
+                sort: true,
+            },
+            {
+                dataField: 'content',
                 isDummyField: true,
-                text: 'other pages',
+                text: 'content',
                 formatter: rankFormatter,
                 sort: false,
             }
             ]
     }
     componentDidMount() {
-        //const user = useContext(UserContext);
-        //console.log(user.name);
-        let context = this.context;
-        console.log(context);
-        //this.context ="eeee";
         var getstr = "";
         const { params } = this.props.match;
         if (params.uid){
-            getstr="http://localhost:3000/api/views/"+params.uid;
+            getstr="http://localhost:3000/api/campaigns_content/"+params.cont;
         }
         else{
-            getstr="http://localhost:3000/api/views/";
+            getstr="http://localhost:3000/api/campaigns_content/";
         }
         axios.get(getstr)
             .then(res => {
@@ -71,7 +114,6 @@ class Views extends Component {
                 this.setState({ posts });
             });
     }
-
     render() {
 
         if ( !this.state.posts) {
@@ -86,6 +128,7 @@ class Views extends Component {
 
         return (
             <div className="container" style={{ marginTop: 50 }}>
+                <DynamicSelect arrayOfData={arrayOfData} onSelectChange={this.handleSelectChange} />
                 <BootstrapTable
                     filter = { filterFactory() }
                     striped
@@ -101,5 +144,6 @@ class Views extends Component {
 
     }
 }
-export default Views;
+
+export default Campaigns_content;
 
