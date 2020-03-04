@@ -57,8 +57,6 @@ class App extends Component {
 
 
     }
-
-
     onDateChange = (event, picker) =>
     {
         console.log(picker.startDate._d);

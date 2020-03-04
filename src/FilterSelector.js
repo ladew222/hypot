@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import AutoComplete from './AutoComplete'
 import Toggle from 'react-bootstrap-toggle';
-import ToggleButton from 'react-bootstrap/ToggleButton'
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+
 
 let filter ="";
 class DynamicSelect extends Component{
     constructor(props){
-        super(props)
+        super(props);
         this.state = { toggleActive: false };
-        this.onToggle = this.onToggle.bind(this);
+        //this.onToggle = this.onToggle.bind(this);
     }
 
     //On the change event for the select box pass the selected value back to the parent
@@ -18,22 +20,33 @@ class DynamicSelect extends Component{
         console.log(event);
         const fieldName = event.target.name;
         const fieldValue = event.target.value;
-        this.state.
-        this.props.onSelectChange(fieldName, fieldValue);
-
-    }
-    onChange_autocomplete = (value) =>
-    {
-        const fieldName = "filter_text";
-        const fieldValue = value;
-        this.props.onSelectChange(fieldName, fieldValue);
-        return value;
-
+        this.setState({[fieldName]: fieldValue});
+        //this.props.onSelectChange(fieldName, fieldValue);
 
     }
     onToggle = (value) =>
     {
         this.setState({ toggleActive: !this.state.toggleActive });
+    }
+
+    onChange_autocomplete = (value) =>
+    {
+        const fieldName = "filter_text";
+        const fieldValue = value;
+        this.setState({[fieldName]: fieldValue});
+        //this.props.onSelectChange(fieldName, fieldValue);
+        return value;
+
+
+    }
+    onSubmit = () =>
+    {
+        this.props.onSelectChange(this.state.filter_text, this.state.filter_type,this.state.toggleActive);
+    }
+    handleAFilterChange = (event) => {
+        const fieldName = event.target.name;
+        const fieldValue = event.target.value;
+        this.setState({[fieldName]: fieldValue});
     }
 
 
@@ -55,29 +68,45 @@ class DynamicSelect extends Component{
                     <div className="row">
                         <div className="col-lg-2">
                             <div className="panel panel-blue">
-
                                 <Toggle
                                     onClick={this.onToggle}
-                                    on={<h6>Find</h6>}
-                                    off={<h6>Search</h6>}
+                                    on={<small>Match Search</small>}
+                                    off={<small>Fuzzy Search</small>}
                                     size="xs"
-                                    offstyle="danger"
+                                    width="110px"
+                                    offstyle="info"
                                     active={this.state.toggleActive}
                                 />
                             </div>
                         </div>
                         <div className="col-lg-3">
-                                { this.state.toggleActive ? <AutoComplete name="filter_text"  onSubmit={this.onChange_autocomplete.bind(this)}  /> : <input type="text" name="search_text" onChange={this.onChange.bind(this)}/>  }
+                                 <AutoComplete name="filter_text" end_date={this.props.end_date} start_date={this.props.start_date} onSubmit={this.onChange_autocomplete.bind(this)}  />
 
                         </div>
-                        <div className="col-lg-7">
+                        <div className="col-lg-3">
                             <div className="panel panel-purple">
                                 <select  name="filter_type" className="custom-search-select selectpicker" onChange={this.onChange.bind(this)}>
                                 <option>Select Item</option>
                                 {options}
                             </select>
-                                <button onClick={shoot}>Take the Shot!</button>
+                                <span>     </span>
+                                <button onClick={this.onSubmit}>Search</button>
+
                             </div>
+                        </div>
+                        <div className="col-lg-3">
+                            <span>     </span>
+                            <label htmlFor='genre'>Favorite genre of music</label>
+                            <ToggleButtonGroup
+                                type='radio'
+                                name='genre'
+                                defaultValue={['all']}
+                                onChange={this.onChange.bind(this)}
+                            >
+                                <ToggleButton value={'all'}>All</ToggleButton>
+                                <ToggleButton value={'converters'}>Converters</ToggleButton>
+                                <ToggleButton value={'other'}>Other</ToggleButton>
+                            </ToggleButtonGroup>
                         </div>
                     </div>
                 </div>

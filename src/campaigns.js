@@ -47,6 +47,12 @@ class Campaigns extends Component {
     constructor(props){
         super(props)
 
+      /*  this.state = {
+            filter_text: "",
+            filter_type: false,
+
+        };*/
+
        /* this.state = {
             selectedValue: 'Nothing selected',
             filter_text: "",
@@ -103,27 +109,27 @@ class Campaigns extends Component {
             }
             ]
     }
-    handleSelectChange = (field, value) =>{
+    handleSelectChange = (filter_txt, filter_typ, filter_mode) =>{
         /*this.setState({
             selectedValue: selectedValue
         });*/
         var getstr = "";
 
-       /* this.setState({
-            hasChanges: false
-        });*/
-       console.log('field')
-       console.log(field);
-         this.setState({[field]: value});
+       this.setState({"filter_text": filter_txt});
+       this.setState({"filter_type": filter_typ});
         console.log('field2')
-         if (field==="filter_type" && this.state.filter_text && this.state.filter_text.length>1){
-             console.log('field3')
-             console.log(value);
+         if (this.state.filter_type!=false && this.state.filter_text && this.state.filter_text.length>1){
              console.log(this.props.state.end_date.toISOString());
-             switch(value) {
+             switch(filter_typ) {
                  case 'content':
                      console.log('field4');
-                     getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+this.state.filter_text;
+                     if (filter_mode==false){
+                         getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
+                     }
+                     else{
+                         getstr="http://localhost:3000/api/campaigns_content_ex/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
+                     }
+
                      console.log(getstr);
                      break;
                  case 'source':
@@ -153,12 +159,13 @@ class Campaigns extends Component {
     componentDidMount() {
         var getstr = "";
         const { params } = this.props.match;
-        if (params.uid){
+      /*  if (params.uid){
             getstr="http://localhost:3000/api/campaigns/"+params.uid;
         }
         else{
             getstr="http://localhost:3000/api/campaigns/";
-        }
+        }*/
+        getstr="http://localhost:3000/api/campaigns/";
         axios.get(getstr)
             .then(res => {
                 const posts = res.data.response;
@@ -175,13 +182,14 @@ class Campaigns extends Component {
         }
 
         if ( this.state.posts.length === 0 ) {
-            return <div>No result found for this subscription</div>;
+            return <div>No result found </div>;
         }
 
         return (
             <div>
-                <DynamicSelect arrayOfData={arrayOfData} onSelectChange={this.handleSelectChange} />
+                <DynamicSelect arrayOfData={arrayOfData} start_date={this.props.state.start_date} end_date={this.props.state.end_date} onSelectChange={this.handleSelectChange} />
             <div className="container" style={{ marginTop: 50 }}>
+                <span className="badge badge-default">{this.state.posts.length} Records</span>
                 <BootstrapTable
                     filter = { filterFactory() }
                     striped

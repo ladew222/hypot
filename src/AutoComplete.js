@@ -4,6 +4,7 @@ import Autosuggest from 'react-autosuggest'
 import axios from 'axios'
 import { debounce } from 'throttle-debounce'
 import DynamicSelect from "./FilterSelector";
+import Moment from 'moment';
 
 //import './styles.css'
 
@@ -25,33 +26,24 @@ class AutoComplete extends React.Component {
       this.onSuggestionsFetchRequested
     )
   }
-
   renderSuggestion = suggestion => {
       console.log(suggestion);
+      this.setState({ value: suggestion })
     return (
       <div className="result">
         <div>{suggestion}</div>
-        <div className="shortCode">{suggestion}</div>
       </div>
     )
   }
-
   onChange = (event, { newValue }) => {
     this.setState({ value: newValue })
       this.props.onSubmit(newValue);
   }
 
-  onSuggestionsFetchRequested = ({ value }) => {
-      axios.get('http://localhost:3000/api/distinct_content')
-          .then(res => {
-              const posts = res.data.response;
-              this.setState({ suggestions: posts });
-          });
-  }
 
 onSuggestionsFetchRequested = ({ value }) => {
     axios
-        .get('http://localhost:3000/api/dist_content/'+value, {
+        .get('http://localhost:3000/api/dist_content/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value, {
             query: {
                 multi_match: {
                     query: value,
