@@ -92,10 +92,19 @@ class Campaigns extends Component {
                 'action_date': 1400
             },
         ],
-        columns: [{
-            dataField: 'uid',
-            text: 'UID'
-        },
+        columns: [
+            {
+                dataField: 'source',
+                text: 'Source',
+                sort: true,
+                filter: textFilter(),
+            },
+            {
+                dataField: 'medium',
+                text: 'Medium',
+                sort: true,
+                filter: textFilter(),
+            },
             {
                 dataField: 'content',
                 text: 'Content',
@@ -112,7 +121,7 @@ class Campaigns extends Component {
                     if (typeof cell !== 'object') {
                         dateObj = new Date(cell);
                     }
-                    return `${('0' + dateObj.getUTCDate()).slice(-2)}/${('0' + (dateObj.getUTCMonth() + 1)).slice(-2)}/${dateObj.getUTCFullYear()}`;
+                    return `${('0' + (dateObj.getUTCMonth() + 1)).slice(-2)}/${('0' + dateObj.getUTCDate()).slice(-2)}/${dateObj.getUTCFullYear()}`;
                 }
             },
             {
@@ -123,6 +132,10 @@ class Campaigns extends Component {
                 sort: false,
             }
             ]
+    }
+    handleSearchChange = (searchText, colInfos, multiColumnSearch) =>{
+        //..
+        this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
     }
     handleSelectChange = (filter_txt, filter_typ, filter_mode,filter_advanced) =>{
         /*this.setState({
@@ -151,7 +164,17 @@ class Campaigns extends Component {
                      console.log(getstr);
                      break;
                  case 'source':
-                     getstr="http://localhost:3000/api/campaigns/"+this.filter;
+                     console.log('field4');
+                     switch(filter_advanced) {
+                         case 'all':
+                             getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
+                             break;
+                         case 'converters':
+                             getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
+                             break;
+                         default:
+                         // code block
+                     }
                      break;
                  case 'medium':
                      getstr="http://localhost:3000/api/campaigns_medium/"+this.filter;
@@ -169,6 +192,7 @@ class Campaigns extends Component {
                      .then(result => this.setState({
                          loading: false,
                          posts: result.data.response,
+                         rowcount: result.data.response.length
                      }));
              });
 
@@ -195,8 +219,14 @@ class Campaigns extends Component {
                 this.setState({ posts });
             });
     }
-
+    handleDataChange = ({ dataSize }) => {
+        this.setState({ rowCount: dataSize });
+    }
     render() {
+        const options = {
+            onSearchChange: this.handleSearchChange.bind(this),
+            onFilterChange : this.handleSearchChange.bind(this)
+        };
         const { posts, loading } = this.state;
 
 
@@ -219,10 +249,12 @@ class Campaigns extends Component {
                     ) : (
                         <div className="container" style={{ marginTop: 50 }}>
                             <span className="badge badge-default">{this.state.posts.length} Records</span>
+                            <span className="badge badge-default">{this.state.rowCount} Filtered</span>
                             <BootstrapTable
                                 filter = { filterFactory() }
                                 striped
                                 filterPosition="top"
+                                onDataSizeChange={ this.handleDataChange }
                                 bootstrap4 = {true}
                                 hover
                                 keyField='pid'
