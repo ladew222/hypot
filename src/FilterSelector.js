@@ -3,7 +3,8 @@ import AutoComplete from './AutoComplete'
 import Toggle from 'react-bootstrap-toggle';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-
+import InputGroup from 'react-bootstrap/InputGroup'
+import {FormControl, FormGroup, DropdownButton,Dropdown} from 'react-bootstrap';
 
 let filter ="";
 class DynamicSelect extends Component{
@@ -43,9 +44,30 @@ class DynamicSelect extends Component{
 
 
     }
+    onChange_autocomplete2 = (value) =>
+    {
+        const fieldName = "filter_text2";
+        const fieldValue = value;
+        this.setState({[fieldName]: fieldValue});
+        //this.props.onSelectChange(fieldName, fieldValue);
+        return value;
+
+
+    }
     onSubmit = () =>
     {
-        this.props.onSelectChange(this.state.filter_text, this.state.filter_type,this.state.toggleActive, this.state.advanced_filter);
+
+        var params = [];
+        if(this.state.filter_type && this.state.filter_text){
+            params.push({name: this.state.filter_type, filter: this.state.filter_text});
+        }
+        if(this.state.filter_type2 && this.state.filter_text2 ){
+            params.push({name: this.state.filter_type2, filter: this.state.filter_text2})
+        }
+
+
+        this.props.onSelectChange(params, this.state.advanced_filter);
+
     }
     handleAFilterChange = (value) => {
         const fieldName = "advanced_filter";
@@ -70,29 +92,40 @@ class DynamicSelect extends Component{
 
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-2">
+                        <div className="col-lg-1">
                             <div className="panel panel-blue">
                                 <Toggle
                                     onClick={this.onToggle}
                                     on={<small>Match Search</small>}
-                                    off={<small>Fuzzy Search</small>}
+                                    off={<small>Fuzzy</small>}
                                     size="xs"
-                                    width="110px"
+                                    width="80px"
                                     offstyle="info"
                                     active={this.state.toggleActive}
                                 />
                             </div>
                         </div>
-                        <div className="col-lg-3">
+                        <div className="col-lg-4">
+                            <div class="ig1">
                                  <AutoComplete name="filter_text" use={this.state.toggleActive} end_date={this.props.end_date} start_date={this.props.start_date} onSubmit={this.onChange_autocomplete.bind(this)}  />
+                                 <select  name="filter_type" className="custom-search-select selectpicker" onChange={this.onChange.bind(this)}>
+                                <option>Select Item</option>
+                                {options}
+                            </select>
+                            </div>
+                            <div className="ig1">
+                                <AutoComplete name="filter_text2" use={this.state.toggleActive} end_date={this.props.end_date} start_date={this.props.start_date} onSubmit={this.onChange_autocomplete2.bind(this)}  />
+                                <select  name="filter_type2" className="custom-search-select selectpicker" onChange={this.onChange.bind(this)}>
+                                    <option>Select Item</option>
+                                    {options}
+                                </select>
+                            </div>
+
 
                         </div>
                         <div className="col-lg-3">
                             <div className="panel panel-purple">
-                                <select  name="filter_type" className="custom-search-select selectpicker" onChange={this.onChange.bind(this)}>
-                                <option>Select Item</option>
-                                {options}
-                            </select>
+
                                 <span>     </span>
                                 <button onClick={this.onSubmit}>Search</button>
 

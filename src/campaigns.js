@@ -13,7 +13,21 @@ import LoadSpinner from "./loading";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import Moment from 'moment';
 
+function createApiStr(params,val){
+    let found = params.filter(obj => {
+        return obj.Name === val
+    })
+    if (found){
+        console.log("found:" + "/" + found.filter.toString());
+        return "/" + found.filter.toString();
+    }
+    else{
+        console.log("notfound");
+        return "/" + "na";
+    }
 
+
+}
 
 function rankFormatter(cell, row, rowIndex, formatExtraData) {
     return (
@@ -137,66 +151,39 @@ class Campaigns extends Component {
         //..
         this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
     }
-    handleSelectChange = (filter_txt, filter_typ, filter_mode,filter_advanced) =>{
+    handleSelectChange = (params,filter_advanced) =>{
         /*this.setState({
             selectedValue: selectedValue
         });*/
         var getstr = "";
 
-       this.setState({"filter_text": filter_txt});
-       this.setState({"filter_type": filter_typ});
-        console.log('field2')
-         if (this.state.filter_type!=false && this.state.filter_text && this.state.filter_text.length>1){
-             console.log(this.props.state.end_date.toISOString());
-             switch(filter_typ) {
-                 case 'content':
-                     console.log('field4');
-                     switch(filter_advanced) {
-                         case 'all':
-                             getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
-                             break;
-                         case 'converters':
-                             getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
-                             break;
-                         default:
-                         // code block
-                     }
-                     console.log(getstr);
-                     break;
-                 case 'source':
-                     console.log('field4');
-                     switch(filter_advanced) {
-                         case 'all':
-                             getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
-                             break;
-                         case 'converters':
-                             getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+"/"+filter_txt;
-                             break;
-                         default:
-                         // code block
-                     }
-                     break;
-                 case 'medium':
-                     getstr="http://localhost:3000/api/campaigns_medium/"+this.filter;
-                     break;
-                 case 'uid':
-                     getstr="http://localhost:3000/api/campaigns/"+this.filter;
-                     break;
-                 default:
-                     getstr="http://localhost:3000/api/campaigns/"+this.filter;
-                     break;
+        //newstr+= createApiStr(params,"source");
+         //newstr+= createApiStr(params,"medium");
+         //newstr+= createApiStr(params,"content");
 
-             }
-             this.setState({ loading: true }, () => {
-                 axios.get(getstr)
-                     .then(result => this.setState({
-                         loading: false,
-                         posts: result.data.response,
-                         rowcount: result.data.response.length
-                     }));
-             });
 
+         switch(filter_advanced) {
+             case 'all':
+                 getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString();
+                 break;
+             case 'converters':
+                 getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString();
+                 break;
+             default:
+             // code block
          }
+
+         console.log(getstr);
+         this.setState({ loading: true }, () => {
+             axios.get(getstr)
+                 .then(result => this.setState({
+                     loading: false,
+                     posts: result.data.response,
+                     rowcount: result.data.response.length
+                 }));
+         });
+
+
 
 
     }

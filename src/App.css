@@ -63,8 +63,12 @@ input {
 }
 
 
-
-
+.as{
+  float: left;
+}
+.ig1 select{
+  padding: 2px;
+}
 
 
 
