@@ -15,15 +15,15 @@ import Moment from 'moment';
 
 function createApiStr(params,val){
     let found = params.filter(obj => {
-        return obj.Name === val
+        return obj.name === val
     })
-    if (found){
-        console.log("found:" + "/" + found.filter.toString());
-        return "/" + found.filter.toString();
+    if (found[0]){
+        console.log("found:" + "/" + found[0].filter);
+        return ("/" + found[0].filter);
     }
     else{
         console.log("notfound");
-        return "/" + "na";
+        return ("/" + "na");
     }
 
 
@@ -57,9 +57,9 @@ const arrayOfData = [
         name: 'medium'
     },
     {
-        id: 'uid',
-        name: 'uid'
-    },
+        id: 'campaign',
+        name: 'campaign'
+    }
 ];
 
 class Campaigns extends Component {
@@ -152,41 +152,35 @@ class Campaigns extends Component {
         this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
     }
     handleSelectChange = (params,filter_advanced) =>{
-        /*this.setState({
-            selectedValue: selectedValue
-        });*/
-        var getstr = "";
+        let newstr= createApiStr(params,"campaign");
+        newstr+= createApiStr(params,"source");
+        newstr+= createApiStr(params,"medium");
+        newstr+= createApiStr(params,"content");
 
-        //newstr+= createApiStr(params,"source");
-         //newstr+= createApiStr(params,"medium");
-         //newstr+= createApiStr(params,"content");
-
-
-         switch(filter_advanced) {
-             case 'all':
-                 getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString();
-                 break;
-             case 'converters':
-                 getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString();
-                 break;
-             default:
-             // code block
-         }
-
-         console.log(getstr);
-         this.setState({ loading: true }, () => {
-             axios.get(getstr)
-                 .then(result => this.setState({
-                     loading: false,
-                     posts: result.data.response,
-                     rowcount: result.data.response.length
-                 }));
-         });
-
-
+        let getstr="";
+        switch(filter_advanced) {
+            case 'all':
+                getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+newstr;
+                break;
+            case 'converters':
+                getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+newstr;
+                break;
+            default:
+            // code block
+        }
+        console.log(getstr);
+        this.setState({ loading: true }, () => {
+            axios.get(getstr)
+                .then(result => this.setState({
+                    loading: false,
+                    posts: result.data.response,
+                    rowcount: result.data.response.length
+                }));
+        });
 
 
     }
+
 
     componentDidMount() {
         var getstr = "";
