@@ -142,7 +142,7 @@ class DynamicSelect extends Component{
                             >
                                 <ToggleButton value={'all'}>All</ToggleButton>
                                 <ToggleButton value={'converters'}>Converters</ToggleButton>
-                                <ToggleButton value={'other'}>Other</ToggleButton>
+                                <ToggleButton value={'merged'}>Merged</ToggleButton>
                             </ToggleButtonGroup>
                         </div>
                     </div>

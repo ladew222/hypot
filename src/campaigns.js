@@ -12,6 +12,9 @@ import { usePromiseTracker } from "react-promise-tracker";
 import LoadSpinner from "./loading";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import Moment from 'moment';
+var _ = require('lodash');
+
+
 
 function createApiStr(params,val){
     let found = params.filter(obj => {
@@ -151,32 +154,73 @@ class Campaigns extends Component {
         //..
         this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
     }
-    handleSelectChange = (params,filter_advanced) =>{
-        let newstr= createApiStr(params,"campaign");
-        newstr+= createApiStr(params,"source");
-        newstr+= createApiStr(params,"medium");
-        newstr+= createApiStr(params,"content");
+    handleSelectChange = (params,filter_advanced) => {
+        let newstr = createApiStr(params, "campaign");
+        newstr += createApiStr(params, "source");
+        newstr += createApiStr(params, "medium");
+        newstr += createApiStr(params, "content");
 
-        let getstr="";
-        switch(filter_advanced) {
+        let getstr = "";
+        switch (filter_advanced) {
             case 'all':
-                getstr="http://localhost:3000/api/campaigns_content/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+newstr;
+                getstr = "http://localhost:3000/api/campaigns_content/" + this.props.state.start_date.toISOString() + "/" + this.props.state.end_date.toISOString() + newstr;
                 break;
             case 'converters':
-                getstr="http://localhost:3000/api/campaigns_content_su/"+this.props.state.start_date.toISOString()+"/"+ this.props.state.end_date.toISOString()+newstr;
+                getstr = "http://localhost:3000/api/campaigns_content_su/" + this.props.state.start_date.toISOString() + "/" + this.props.state.end_date.toISOString() + newstr;
                 break;
             default:
             // code block
         }
         console.log(getstr);
-        this.setState({ loading: true }, () => {
-            axios.get(getstr)
-                .then(result => this.setState({
-                    loading: false,
-                    posts: result.data.response,
-                    rowcount: result.data.response.length
-                }));
-        });
+        if (1 == 2) {
+            this.setState({loading: true}, () => {
+                axios.get(getstr)
+                    .then(result => this.setState({
+                        loading: false,
+                        posts: result.data.response,
+                        rowcount: result.data.response.length
+                    }));
+            });
+        }
+        else{
+            this.setState({loading: true}, () => {
+                let one = getstr;
+                let two = "http://localhost:3000/test";
+                const requestOne = axios.get(one);
+                const requestTwo = axios.get(two);
+                axios
+                    .all([requestOne, requestTwo,])
+                    .then(
+                        axios.spread((...responses) => {
+                            const a1 = responses[0];
+                            const a2 = responses[1];
+                            console.log("here");
+                            console.log(responses[0]);
+                            console.log(responses[1]);
+                            const mergeById = (a1, a2) =>
+                                a1.map(itm => ({
+                                    ...a2.find((item) => (item.uid === itm.Opportgarefid) && item),
+                                    ...itm
+                                }));
+                            console.log(mergeById);
+                            this.setState({
+                                loading: false,
+                                posts: mergeById,
+                                rowcount: mergeById.length
+                            })
+                            console.log("here2");
+                            // use/access the results
+                            //console.log(a1, a2);
+                        })
+                    )
+                    .catch(errors => {
+                        // react on errors.
+                        console.error(errors);
+                    });
+            });
+
+
+        }
 
 
     }
@@ -194,11 +238,43 @@ class Campaigns extends Component {
 
 
         getstr="http://localhost:3000/api/campaigns/";
-        axios.get(getstr)
-            .then(res => {
-                const posts = res.data.response;
-                this.setState({ posts });
-            });
+        if (1==1) {
+            axios.get(getstr)
+                .then(res => {
+                    const posts = res.data.response;
+                    this.setState({posts});
+                });
+        }
+        else{
+            let one = getstr;
+            let two = "http://198.150.49.59:8081/rall/"
+            const requestOne = axios.get(one);
+            const requestTwo = axios.get(two);
+
+            axios
+                .all([requestOne, requestTwo,])
+                .then(
+                    axios.spread((...responses) => {
+                        const a1 = responses[0];
+                        const a2 = responses[1];
+
+                        const mergeById = (a1, a2) =>
+                            a1.map(itm => ({
+                                ...a2.find((item) => (item.id === itm.id) && item),
+                                ...itm
+                            }));
+                        this.setState({mergeById});
+
+                        // use/access the results
+                        //console.log(a1, a2);
+                    })
+                )
+                .catch(errors => {
+                    // react on errors.
+                    console.error(errors);
+                });
+
+        }
     }
     handleDataChange = ({ dataSize }) => {
         this.setState({ rowCount: dataSize });
