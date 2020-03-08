@@ -42,9 +42,10 @@ class App extends Component {
 
     constructor(props) {
         super(props);
+
         console.log("start"); // ["name"]
         this.state = {
-            start_date: new Date(),
+            start_date: new Moment().subtract(7, "days").toDate(),
             end_date: new Date()
         };
 
@@ -91,7 +92,7 @@ class App extends Component {
                                 -  <span className="number">{Moment(this.state.end_date).format('MMMM Do YYYY')}</span>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#"><DateRange onSubmit={this.onDateChange} /></a>
+                                <a className="nav-link" href="#"><DateRange startDate={this.state.start_date} endDate={this.state.end_date} onSubmit={this.onDateChange} /></a>
                             </li>
                         </ul>
                     </div>

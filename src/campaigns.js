@@ -244,6 +244,7 @@ class Campaigns extends Component {
                             //let newArr = a2.concat(r).map((v) => v.position ? v : { ...v, position: null });
 
                             var m = new Map();
+                            var n = new Map();
 
                             a1.forEach(function(x) { x.position = null; m.set(x.uid, x); });
                             a2.forEach(function(x) {
@@ -253,6 +254,7 @@ class Campaigns extends Component {
                                     console.log('unfound');
                                 else
                                     Object.assign(existing, x);
+                                    n.set(x.uid,x);
                             });
 
                             var result = Array.from(m.values());
@@ -349,6 +351,7 @@ class Campaigns extends Component {
                                 onDataSizeChange={ this.handleDataChange }
                                 bootstrap4 = {true}
                                 hover
+                                classes='table-sm'
                                 keyField='pid'
                                 data={ this.state.posts }
                                 columns={ this.state.columns }

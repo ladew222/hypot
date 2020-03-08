@@ -10,7 +10,7 @@ class DateRange extends Component {
     }
     render() {
         return (
-            <DateRangePicker startDate="1/1/2020" endDate="3/1/2020" onApply={this.props.onSubmit}>
+            <DateRangePicker startDate={this.props.startDate} endDate={this.props.endDate} onApply={this.props.onSubmit}>
                 <button>Change</button>
             </DateRangePicker>
         );
