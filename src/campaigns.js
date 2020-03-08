@@ -193,13 +193,12 @@ class Campaigns extends Component {
                     dataField: 'program_desc',
                     text: 'Program',
                     sort: true,
-                    filter: textFilter({
-                        onFilter: filterVal => this.onFilter(filterVal, "program_desc")
-                    })
+                    filter: textFilter()
                 })
                 this.state.columns.push( {
-                    dataField: 'uid',
-                    text: 'Opportgarefid',
+                    dataField: 'CreatedOn',
+                    text: 'Opp Date',
+                    filter: dateFilter(),
                     sort: true
                 })
                 break;
