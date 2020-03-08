@@ -43,23 +43,7 @@ class AutoComplete extends React.Component {
 
 onSuggestionsFetchRequested = ({ value }) => {
       if(this.props.use==true){
-          let getstr ="";
-          switch (this.props.filter_type) {
-              case 'content':
-                  getstr = 'http://localhost:3000/api/dist_content/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
-                  break;
-              case 'source':
-                  getstr = 'http://localhost:3000/api/dist_source/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
-                  break;
-              case 'medium':
-                  getstr = 'http://localhost:3000/api/dist_medium/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
-                  break;
-              case 'campaign':
-                  getstr = 'http://localhost:3000/api/dist_campaign' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
-                  break;
-
-              default:
-
+          let getstr = 'http://localhost:3000/api/dist/' + this.props.start_date.toISOString() + "/" + this.props.end_date.toISOString() + "/" +  value + "/" + this.props.filter_type ;
 
         axios
             .get(getstr, {
@@ -74,9 +58,10 @@ onSuggestionsFetchRequested = ({ value }) => {
             .then(res => {
                 console.log(res );
                 //const results = res.data.response;
-                const results = res.data.response.map(h => h.content)
+                //const results = res.data.response.map(h => h.content);
+                const results = eval('res.data.response.map(h => h.' +this.props.filter_type + ')');
                 //const results = res.data.hits.hits.map(h => h.content)
-                this.setState({ suggestions: results })
+                this.setState({ suggestions: results });
             })
       }
 }
