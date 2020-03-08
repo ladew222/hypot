@@ -4,7 +4,7 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Dialog from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import filterFactory, {dateFilter, textFilter} from 'react-bootstrap-table2-filter';
 import axios from "axios";
 
 
@@ -46,7 +46,8 @@ class Predictions extends Component {
     ],
     columns: [{
       dataField: 'uid',
-      text: 'UID'
+      text: 'UID',
+      filter: textFilter()
     },
       {
         dataField: 'pred',
@@ -55,9 +56,23 @@ class Predictions extends Component {
         filter: textFilter(),
       },
       {
+        dataField: 'loc',
+        text: 'Location',
+        sort: true,
+        filter: textFilter(),
+      },
+      {
         dataField: 'action_date',
         text: 'date',
         sort: true,
+        filter: dateFilter(),
+        formatter: (cell) => {
+          let dateObj = cell;
+          if (typeof cell !== 'object') {
+            dateObj = new Date(cell);
+          }
+          return `${('0' + (dateObj.getUTCMonth() + 1)).slice(-2)}/${('0' + dateObj.getUTCDate()).slice(-2)}/${dateObj.getUTCFullYear()}`;
+        }
       },
       {
         dataField: 'pages',
