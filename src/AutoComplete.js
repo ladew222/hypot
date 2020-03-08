@@ -43,12 +43,30 @@ class AutoComplete extends React.Component {
 
 onSuggestionsFetchRequested = ({ value }) => {
       if(this.props.use==true){
+          let getstr ="";
+          switch (this.props.filter_type) {
+              case 'content':
+                  getstr = 'http://localhost:3000/api/dist_content/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
+                  break;
+              case 'source':
+                  getstr = 'http://localhost:3000/api/dist_source/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
+                  break;
+              case 'medium':
+                  getstr = 'http://localhost:3000/api/dist_medium/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
+                  break;
+              case 'campaign':
+                  getstr = 'http://localhost:3000/api/dist_campaign' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value;
+                  break;
+
+              default:
+
+
         axios
-            .get('http://localhost:3000/api/dist_content/' +this.props.start_date.toISOString()+"/"+ this.props.end_date.toISOString()+"/"+value, {
+            .get(getstr, {
                 query: {
                     multi_match: {
                         query: value,
-                        fields: ['content']
+                        fields: [this.props.filter_type]
                     }
                 },
 
