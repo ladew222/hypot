@@ -96,6 +96,8 @@ class Views extends Component {
 
         return (
             <div className="container" style={{ marginTop: 50 }}>
+                <span className="badge badge-default">{this.state.posts.length} Records</span>
+                <span className="badge badge-default">{this.state.rowCount} Filtered</span>
                 <BootstrapTable
                     filter = { filterFactory() }
                     striped
