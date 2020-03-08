@@ -14,6 +14,18 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import Moment from 'moment';
 var _ = require('lodash');
 
+//Searches a word for anything contained in the array
+function stringContainsAny(stringToSearch, arrayOfSearchTerms) {
+    var i;
+    for (i = 0; i < arrayOfSearchTerms.length; i++) {
+        var term = arrayOfSearchTerms[i].trim();
+        //Ignore empty
+        if (term !== "" && stringToSearch.indexOf(term) !== -1) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 function createApiStr(params,val){
@@ -68,7 +80,8 @@ const arrayOfData = [
 class Campaigns extends Component {
 
     constructor(props){
-        super(props)
+        super(props);
+        this.onFilter = this.onFilter.bind(this);
 
       /*  this.state = {
             filter_text: "",
@@ -89,6 +102,12 @@ class Campaigns extends Component {
                selectedValue: 'Nothing selected'
            }*/
     }
+
+    onFilter(filterVal, key) {
+            this.state.posts.filter(row => row[key].indexOf(filterVal) !== -1);
+
+    }
+
 
 
     state = {
@@ -173,7 +192,10 @@ class Campaigns extends Component {
                 this.state.columns.push( {
                     dataField: 'program_desc',
                     text: 'Program',
-                    sort: true
+                    sort: true,
+                    filter: textFilter({
+                        onFilter: filterVal => this.onFilter(filterVal, "program_desc")
+                    })
                 })
                 this.state.columns.push( {
                     dataField: 'uid',
@@ -224,11 +246,12 @@ class Campaigns extends Component {
 
                             var m = new Map();
 
-                            a2.forEach(function(x) { x.position = null; m.set(x.uid, x); });
-                            a1.forEach(function(x) {
+                            a1.forEach(function(x) { x.position = null; m.set(x.uid, x); });
+                            a2.forEach(function(x) {
                                 var existing = m.get(x.uid);
                                 if (existing === undefined)
-                                    m.set(x.uid, x);
+                                   // m.set(x.uid, x);
+                                    console.log('unfound');
                                 else
                                     Object.assign(existing, x);
                             });
