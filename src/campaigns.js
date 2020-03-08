@@ -176,7 +176,7 @@ class Campaigns extends Component {
                     sort: true
                 })
                 this.state.columns.push( {
-                    dataField: 'Opportgarefid',
+                    dataField: 'uid',
                     text: 'Opportgarefid',
                     sort: true
                 })
@@ -210,19 +210,35 @@ class Campaigns extends Component {
                             console.log("here");
                             console.log(responses[0]);
                             console.log(responses[1]);
-                            let merged = [];
+                            //let merged = [];
                             a1=a1.data.response;
                             console.log("a1");
                             console.log(a1);
                             a2=a2.data;
                             console.log("a2");
                             console.log(a2);
-                            const mergeById = (a1, a2) =>
-                                a1.map(itm => ({
-                                    ...a2.find((item) => ('item.uid'== '111') ),
-                                    ...itm
-                                }));
-                            merged=mergeById(a1, a2);
+
+
+                            //let r = a1.filter(({ uid: idv }) => a2.every(({ uid: idc }) => idv !== idc));
+                            //let newArr = a2.concat(r).map((v) => v.position ? v : { ...v, position: null });
+
+                            var m = new Map();
+
+                            a2.forEach(function(x) { x.position = null; m.set(x.uid, x); });
+                            a1.forEach(function(x) {
+                                var existing = m.get(x.uid);
+                                if (existing === undefined)
+                                    m.set(x.uid, x);
+                                else
+                                    Object.assign(existing, x);
+                            });
+
+                            var result = Array.from(m.values());
+
+
+
+                            console.log(result);
+                            let merged=result;
                             console.log("merged");
                             console.log(merged);
                             console.log("unique");
