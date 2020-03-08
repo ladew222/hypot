@@ -168,11 +168,24 @@ class Campaigns extends Component {
             case 'converters':
                 getstr = "http://localhost:3000/api/campaigns_content_su/" + this.props.state.start_date.toISOString() + "/" + this.props.state.end_date.toISOString() + newstr;
                 break;
+            case 'merged':
+                getstr = "http://localhost:3000/api/campaigns_content/" + this.props.state.start_date.toISOString() + "/" + this.props.state.end_date.toISOString() + newstr;
+                this.state.columns.push( {
+                    dataField: 'program_desc',
+                    text: 'Program',
+                    sort: true
+                })
+                this.state.columns.push( {
+                    dataField: 'Opportgarefid',
+                    text: 'Opportgarefid',
+                    sort: true
+                })
+                break;
             default:
             // code block
         }
         console.log(getstr);
-        if (1 == 2) {
+        if (filter_advanced!='merged') {
             this.setState({loading: true}, () => {
                 axios.get(getstr)
                     .then(result => this.setState({
@@ -192,26 +205,28 @@ class Campaigns extends Component {
                     .all([requestOne, requestTwo,])
                     .then(
                         axios.spread((...responses) => {
-                            const a1 = responses[0];
-                            const a2 = responses[1];
+                            let a1 = responses[0];
+                            let a2 = responses[1];
                             console.log("here");
                             console.log(responses[0]);
                             console.log(responses[1]);
                             let merged = [];
-                            let arr1=a1.data.response;
+                            a1=a1.data.response;
                             console.log("a1");
-                            console.log(arr1);
-                            let arr2=a2.data;
+                            console.log(a1);
+                            a2=a2.data;
                             console.log("a2");
-                            console.log(arr2);
-                            for(let i=0; i<arr1.length; i++) {
-                                merged.push({
-                                    ...arr1[i],
-                                    ...(arr2.find((itmInner) => itmInner.uid === arr1[i].Opportgarefid))}
-                                );
-                            }
+                            console.log(a2);
+                            const mergeById = (a1, a2) =>
+                                a1.map(itm => ({
+                                    ...a2.find((item) => ('item.uid'== '111') ),
+                                    ...itm
+                                }));
+                            merged=mergeById(a1, a2);
                             console.log("merged");
                             console.log(merged);
+                            console.log("unique");
+                            console.log(_.filter(merged, _.all));
                             this.setState({
                                 loading: false,
                                 posts: merged,
@@ -255,33 +270,6 @@ class Campaigns extends Component {
                 });
         }
         else{
-            let one = getstr;
-            let two = "http://198.150.49.59:8081/rall/"
-            const requestOne = axios.get(one);
-            const requestTwo = axios.get(two);
-
-            axios
-                .all([requestOne, requestTwo,])
-                .then(
-                    axios.spread((...responses) => {
-                        const a1 = responses[0];
-                        const a2 = responses[1];
-
-                        const mergeById = (a1, a2) =>
-                            a1.map(itm => ({
-                                ...a2.find((item) => (item.id === itm.id) && item),
-                                ...itm
-                            }));
-                        this.setState({mergeById});
-
-                        // use/access the results
-                        //console.log(a1, a2);
-                    })
-                )
-                .catch(errors => {
-                    // react on errors.
-                    console.error(errors);
-                });
 
         }
     }
