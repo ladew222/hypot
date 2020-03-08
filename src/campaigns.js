@@ -197,16 +197,25 @@ class Campaigns extends Component {
                             console.log("here");
                             console.log(responses[0]);
                             console.log(responses[1]);
-                            const mergeById = (a1, a2) =>
-                                a1.map(itm => ({
-                                    ...a2.find((item) => (item.uid === itm.Opportgarefid) && item),
-                                    ...itm
-                                }));
-                            console.log(mergeById);
+                            let merged = [];
+                            let arr1=a1.data.response;
+                            console.log("a1");
+                            console.log(arr1);
+                            let arr2=a2.data;
+                            console.log("a2");
+                            console.log(arr2);
+                            for(let i=0; i<arr1.length; i++) {
+                                merged.push({
+                                    ...arr1[i],
+                                    ...(arr2.find((itmInner) => itmInner.uid === arr1[i].Opportgarefid))}
+                                );
+                            }
+                            console.log("merged");
+                            console.log(merged);
                             this.setState({
                                 loading: false,
-                                posts: mergeById,
-                                rowcount: mergeById.length
+                                posts: merged,
+                                rowcount: merged.length
                             })
                             console.log("here2");
                             // use/access the results
