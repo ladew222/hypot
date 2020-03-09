@@ -1,17 +1,13 @@
-import React, { Component } from 'react';
-import { Button } from 'react-bootstrap-table-next';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import React, {Component} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Dialog from 'react-bootstrap-table-next';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import filterFactory, { textFilter,dateFilter } from 'react-bootstrap-table2-filter';
+import filterFactory, {dateFilter, textFilter} from 'react-bootstrap-table2-filter';
 import DynamicSelect from "./FilterSelector";
 import axios from "axios";
-import AutoComplete from "./AutoComplete";
-import { usePromiseTracker } from "react-promise-tracker";
 import LoadSpinner from "./loading";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import Moment from 'moment';
+
 var _ = require('lodash');
 
 //Searches a word for anything contained in the array
@@ -107,8 +103,6 @@ class Campaigns extends Component {
             this.state.posts.filter(row => row[key].indexOf(filterVal) !== -1);
 
     }
-
-
 
     state = {
         products: [
