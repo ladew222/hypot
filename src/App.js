@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
 import './App.css';
-import request from 'superagent';
-import Predictions from "./Predictions";
-import Views from "./views";
-import Actions from "./actions";
-import Campaigns from "./campaigns";
-import DateRange from "./DateRange";
-import AutoComplete from "./AutoComplete";
+import Users from "./users";
 import Moment from 'moment';
+import idBox from "./IDbox";
+import Groups from "./groups";
+import AutoComplete from "./AutoComplete";
+import Settings from "./settings";
+
 
 
 
@@ -44,30 +43,56 @@ class App extends Component {
         super(props);
 
         console.log("start"); // ["name"]
+        const key = localStorage.key
+        const group = localStorage.group;
         this.state = {
-            start_date: new Moment().subtract(7, "days").toDate(),
-            end_date: new Date()
+            key: key,
+            group: group ? group: " ",
         };
+
+    }
+        onChangeAuto = (value) =>
+    {
+        console.log("event");
+        this.setState({ group: value});
+
+    }
+       settingsChange = (value) =>
+    {
+        console.log("here");
+        const { key, group } = value;
+        localStorage.setItem('key', key);
+        localStorage.setItem('group', group);
+        this.setState({ group: group});
+        this.setState({ key: key});
+        console.log("here2");
 
     }
 
     componentDidMount() {
+        const key = localStorage.getItem('key');
+        const group = localStorage.getItem('group');
+        this.setState({ group: group});
+        this.setState({ key: key});
 
     }
     handleChange = (field, value) =>{
 
 
     }
-    onDateChange = (event, picker) =>
+     onSubmit = (st) =>
     {
-        console.log(picker.startDate._d);
-        const start_d =  new Date(picker.startDate._d);
-        const end_d =  new Date(picker.endDate._d);
-        console.log(end_d.toString());
-        this.setState({ start_date: start_d });
-        this.setState({ end_date: end_d });
+        const { key, group } = st;
+        localStorage.setItem('key', key);
+        localStorage.setItem('group', group);
+        this.setState({ group: group});
+        this.setState({ key: key});
     }
 
+    onIDChange = (event) =>
+    {
+        this.setState({ uid: event.target.value });
+    }
     render() {
         return (
             <div>
@@ -79,28 +104,26 @@ class App extends Component {
                             <Link className="nav-link" to="/predictions">Predictions</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/views">Views</Link>
+                            <Link className="nav-link" to="/users">Users</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/campaigns">Campaigns</Link>
+                             <Link className="nav-link" to="/groups">Group</Link>
+                        </li>
+                         <li className="nav-item">
+                             <Link className="nav-link" to="/settings">Settings</Link>
                         </li>
                     </ul>
                     <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
-                                <span className="number">{Moment(this.state.start_date).format('MMMM Do YYYY')}</span>
-                                -  <span className="number">{Moment(this.state.end_date).format('MMMM Do YYYY')}</span>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#"><DateRange startDate={this.state.start_date} endDate={this.state.end_date} onSubmit={this.onDateChange} /></a>
+                               <AutoComplete name="filter_text"  uid={this.props.uid}  onSubmit={this.onChangeAuto}  /> <input type="text" value={this.state.key+"a"} autoFocus="autofocus" onChange={this.onIDChange}/>
                             </li>
                         </ul>
                     </div>
                 </nav>
-                <Route path="/actions/:uid?" render={(props) => <Actions {...props} state={this.state} />} />
-                <Route path="/predictions/:uid?" render={(props) => <Predictions {...props} state={this.state} />} />
-                <Route path="/views/:uid?" render={(props) => <Views {...props} state={this.state} />} />
-                <Route path="/campaigns/:uid?" render={(props) => <Campaigns {...props} state={this.state} />} />
+                <Route path="/users/:uid?" render={(props) => <Users {...props} state={this.state} />} />
+                <Route path="/groups/:gid?" render={(props) => <Groups {...props} state={this.state} />} />
+                <Route path="/settings" render={(props) => <Settings {...props} onSubmit={this.settingsChange} state={this.state} />} />
             </div>
 
         );

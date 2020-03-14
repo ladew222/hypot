@@ -16,7 +16,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
             style={{ textAlign: "center",
                 cursor: "pointer",
                 lineHeight: "normal" }}>
-            <a href={`/groups/${row.userid}`} >{row.username} </a>
+            <a href={`/users/${row.userid}`} >{row.username} </a>
             < div
                 style={{ fontSize: 20 }}
                 color="disabled"
@@ -26,7 +26,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
 
 
 
-class Users extends Component {
+class Groups extends Component {
 
 
 
@@ -68,9 +68,9 @@ class Users extends Component {
         //console.log(context);
         //this.context ="eeee";
         var getstr = "";
-        const { params } = this.props.match;
-        getstr="https://api.hypothes.is/api/search?user=" + this.props.uid +" ";
 
+        const { params } = this.props.match;
+        getstr="https://api.hypothes.is/api/groups/" + 'arVX9DZ4' +"/members";
         var config = {
           headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
         };
@@ -97,7 +97,6 @@ class Users extends Component {
         let filter_text = params[0].filter;
 
         getstr = "https://api.hypothes.is/api/groups/arVX9DZ4/members";
-
         const headers = {
           'Accept': 'application/json',
           'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',
@@ -167,5 +166,5 @@ class Users extends Component {
         }
     }
 }
-export default Users;
+export default Groups;
 

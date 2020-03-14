@@ -129,3 +129,6 @@ react-autosuggest__container {
 .react-autosuggest__suggestion--highlighted {
   background-color: #ddd;
 }
+.react-bootstrap-table table{
+  table-layout: auto !important;
+}

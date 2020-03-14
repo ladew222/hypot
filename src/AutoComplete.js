@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom'
 import Autosuggest from 'react-autosuggest'
 import axios from 'axios'
 import { debounce } from 'throttle-debounce'
-import DynamicSelect from "./FilterSelector";
 import Moment from 'moment';
 
 //import './styles.css'
 
 function getSuggestionValue(suggestion) {
     console.log(suggestion);
-    return suggestion;
+    return suggestion.name;
 }
 
 
@@ -28,42 +27,43 @@ class AutoComplete extends React.Component {
   }
   renderSuggestion = suggestion => {
       console.log(suggestion);
-      this.setState({ value: suggestion })
+      this.setState({ value: suggestion.name })
     return (
       <div className="result">
-        <div>{suggestion}</div>
+        <div>{suggestion.name}</div>
       </div>
     )
   }
   onChange = (event, { newValue }) => {
+    let obj = this.state.suggestion.find(obj => obj.name == newValue);
     this.setState({ value: newValue })
-      this.props.onSubmit(newValue);
+      this.props.onSubmit(obj.id);
   }
 
 
 onSuggestionsFetchRequested = ({ value }) => {
-      if(this.props.use==true){
-          let getstr = 'http://localhost:3000/api/dist/' + this.props.start_date.toISOString() + "/" + this.props.end_date.toISOString() + "/" +  value + "/" + this.props.filter_type ;
 
-        axios
-            .get(getstr, {
-                query: {
-                    multi_match: {
-                        query: value,
-                        fields: [this.props.filter_type]
-                    }
-                },
+         let getstr = 'https://api.hypothes.is/api/profile/groups';
 
-            })
+         var config = {
+          headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
+        };
+
+         axios.get("https://api.hypothes.is/api/profile/groups", config)
             .then(res => {
-                console.log(res );
-                //const results = res.data.response;
-                //const results = res.data.response.map(h => h.content);
-                const results = eval('res.data.response.map(h => h.' +this.props.filter_type + ')');
-                //const results = res.data.hits.hits.map(h => h.content)
-                this.setState({ suggestions: results });
-            })
-      }
+                const posts = res.data.rows;
+                let new_arr=[];
+                console.log(res.data);
+                Object.keys(res.data).forEach(function (item) {
+                    console.log(item); // key
+                    console.log(res.data[item]); // value
+                    new_arr.push({name:res.data[item].name,id:res.data[item]});
+                });
+                this.setState({suggestions: new_arr});
+        });
+
+
+
 }
 
   onSuggestionsClearRequested = () => {

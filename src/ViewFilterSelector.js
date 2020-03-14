@@ -91,7 +91,7 @@ class ViewDynamicSelect extends Component{
                         </div>
                         <div className="col-lg-4">
                             <div class="ig1">
-                                 <AutoComplete name="filter_text" filter_type={this.state.filter_type} use={this.state.toggleActive} end_date={this.props.end_date} start_date={this.props.start_date} onSubmit={this.onChange_autocomplete.bind(this)}  />
+                                 <AutoComplete name="filter_text" filter_type={this.state.filter_type} use={this.state.toggleActive} uid={this.props.uid}  onSubmit={this.onChange_autocomplete.bind(this)}  />
                                  <select  name="filter_type" className="custom-search-select selectpicker" onChange={this.onChange.bind(this)}>
                                 <option>Select Item</option>
                                 {options}
