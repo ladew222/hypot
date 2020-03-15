@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link,Router } from 'react-router-dom';
 import './App.css';
 import Users from "./users";
 import Moment from 'moment';
 import idBox from "./IDbox";
 import Groups from "./groups";
-import AutoComplete from "./AutoComplete";
 import Settings from "./settings";
-
-
+import Select from 'react-select';
+import DyDrop from "./DropDown";
+import history from './history';
 
 
 const Home = () => (
@@ -43,15 +43,17 @@ class App extends Component {
         super(props);
 
         console.log("start"); // ["name"]
-        const key = localStorage.key
+        const key = localStorage.key;
         const group = localStorage.group;
+        const groupId = localStorage.groupId;
         this.state = {
             key: key,
             group: group ? group: " ",
+            groupId: groupId ? groupId: " ",
         };
 
     }
-        onChangeAuto = (value) =>
+        onChangeDrop = (value) =>
     {
         console.log("event");
         this.setState({ group: value});
@@ -60,10 +62,12 @@ class App extends Component {
        settingsChange = (value) =>
     {
         console.log("here");
-        const { key, group } = value;
+        const { key, group,groupId } = value;
         localStorage.setItem('key', key);
         localStorage.setItem('group', group);
-        this.setState({ group: group});
+        localStorage.setItem('groupId', groupId);
+        //this.setState({ group: group});
+        //this.setState({ groupId: groupId});
         this.setState({ key: key});
         console.log("here2");
 
@@ -72,7 +76,9 @@ class App extends Component {
     componentDidMount() {
         const key = localStorage.getItem('key');
         const group = localStorage.getItem('group');
+        const groupId = localStorage.getItem('groupId');
         this.setState({ group: group});
+        this.setState({ groupId: groupId});
         this.setState({ key: key});
 
     }
@@ -82,10 +88,12 @@ class App extends Component {
     }
      onSubmit = (st) =>
     {
-        const { key, group } = st;
+        const { key, group,groupId } = st;
         localStorage.setItem('key', key);
         localStorage.setItem('group', group);
+        localStorage.setItem('groupId', groupId);
         this.setState({ group: group});
+        this.setState({ groupId: groupId});
         this.setState({ key: key});
     }
 
@@ -116,7 +124,7 @@ class App extends Component {
                     <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
-                               <AutoComplete name="filter_text"  uid={this.props.uid}  onSubmit={this.onChangeAuto}  /> <input type="text" value={this.state.key+"a"} autoFocus="autofocus" onChange={this.onIDChange}/>
+                               <DyDrop onSelect={this.onChangeDrop} value={{group:this.state.group,groupId:this.state.groupId}} /><input type="text" value={this.state.key+"a"} autoFocus="autofocus" onChange={this.onIDChange}/>
                             </li>
                         </ul>
                     </div>
