@@ -9,7 +9,22 @@ import axios from "axios";
 import ViewDynamicSelect from "./ViewFilterSelector";
 import LoadSpinner from "./loading";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import GroupFilter from "./GroupFilter";
 
+
+function groupBy(array, key){
+
+      const groupBy = (array, key) => {
+                      return array.reduce((result, currentValue) => {
+                        (result[currentValue.color] = result[currentValue.color] || []).push(
+                          currentValue
+                        );
+                        console.log(result);
+                        return result;
+                      }, {});
+                    };
+      return groupBy(array,key);
+}
 
 
 function rankFormatter(cell, row, rowIndex, formatExtraData) {
@@ -18,7 +33,7 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
             style={{ textAlign: "center",
                 cursor: "pointer",
                 lineHeight: "normal" }}>
-            <a href={row.link} >{row.title} </a>
+            <a href={`/users/${row.userid}`} >{row.username} </a>
             < div
                 style={{ fontSize: 20 }}
                 color="disabled"
@@ -26,53 +41,77 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
         </div>
     ); }
 
+    let documents = [
+    {
+        dataField: 'uri',
+        text: 'uri',
+        sort: true,
+        filter: textFilter(),
+    },
+    {
+        dataField: 'commenters',
+        text: 'commenters',
+        sort: true,
+        filter: textFilter(),
+    }
+]
+let members = [{
+                dataField: 'userid',
+                text: 'userid',
+                filter: textFilter()
+            },
+            {
+                dataField: 'username',
+                text: 'username',
+                sort: true,
+                filter: textFilter(),
+            },
+            {
+                dataField: 'display_name',
+                text: 'display_name',
+                sort: true,
+                filter: textFilter(),
+            },
+            {
+                dataField: 'UserInfo',
+                isDummyField: true,
+                text: 'other pages',
+                formatter: rankFormatter,
+                sort: false,
+            },
+            ]
 
 
-class Users extends Component {
+
+class Groups extends Component {
 
 
 
     state = {
 
-    columns: [
-            {
-                dataField: 'created',
-                text: 'date',
-                sort: true,
-                filter: dateFilter(),
-                formatter: (cell) => {
-                  let dateObj = cell;
-                  if (typeof cell !== 'object') {
-                    dateObj = new Date(cell);
-                  }
-                  return `${('0' + (dateObj.getUTCMonth() + 1)).slice(-2)}/${('0' + dateObj.getUTCDate()).slice(-2)}/${dateObj.getUTCFullYear() }`;
-                }
+            columns: [{
+                dataField: 'userid',
+                text: 'userid',
+                filter: textFilter()
             },
             {
-                dataField: 'created',
-                text: 'time',
-                sort: true,
-                formatter: (cell) => {
-                  let dateObj = cell;
-                  if (typeof cell !== 'object') {
-                    dateObj = new Date(cell);
-                  }
-                  return `${ dateObj.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true })}`;
-                }
-            },
-
-            {
-                dataField: 'Document',
-                isDummyField: true,
-                text: 'Document',
-                formatter: rankFormatter,
-                sort: false,
-            },
-            {
-                dataField: 'text',
-                text: 'text',
+                dataField: 'username',
+                text: 'username',
                 sort: true,
                 filter: textFilter(),
+            },
+            {
+                dataField: 'display_name',
+                text: 'display_name',
+                sort: true,
+                filter: textFilter(),
+            },
+            {
+                dataField: 'UserInfo',
+                isDummyField: true,
+                text: 'other pages',
+                formatter: rankFormatter,
+                sort: false,
             },
             ]
     }
@@ -88,71 +127,65 @@ class Users extends Component {
         var getstr = "";
 
         const { params } = this.props.match;
-        getstr="https://api.hypothes.is/api/search?user="+params.uid;
+        getstr="https://api.hypothes.is/api/search?group=" + 'arVX9DZ4';
         var config = {
           headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
         };
-
+        console.log("almost");
+        console.log("axios");
         axios.get(getstr, config)
             .then(res => {
-                const posts = res.data.rows;
-                let new_arr=[];
-                Object.keys(res.data.rows).forEach(function (item) {
-                    console.log(item); // key
-                    console.log(res.data.rows[item]); // value
-                    new_arr.push({title: res.data.rows[item].document.title,link: res.data.rows[item].links.html,created:res.data.rows[item].created,text:res.data.rows[item].text})
-                });
-                axios.get("https://api.hypothes.is/api/users/"+ params.uid, config)
-                    .then(res => {
-                        const posts = res.data.rows;
-                        let new_arr=[];
-                        Object.keys(res.data.rows).forEach(function (item) {
-                            console.log(item); // key
-                            console.log(res.data.rows[item]); // value
-                            new_arr.push({title: res.data.rows[item].document.title,link: res.data.rows[item].links.html,created:res.data.rows[item].created,text:res.data.rows[item].text})
-                        });
-                        this.setState({
-                            loading: false,
-                            posts: new_arr,
-                            rowcount: posts.length,
-                        })
-                });
-
-
+                const posts = res.data;
+                console.log(res);
                 this.setState({
                     loading: false,
-                    posts: new_arr,
+                    posts: posts,
                     rowcount: posts.length
                 })
             });
-
     }
     handleSearchChange = (searchText, colInfos, multiColumnSearch) =>{
         //..
         this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
     }
+    handleFilterChange = (value) =>{
+        const { params } = this.props.match;
+        let getstr ="";
+        switch (value) {
+            case 'Members':
+                this.state.columns=members;
+                getstr = "https://api.hypothes.is/api/search";
+                break;
+            case 'Documents':
+                this.state.columns=documents;
+                getstr = "https://api.hypothes.is/api/search";
+                break;
+            case 'user':
 
-    handleSelectChange = (params,filter_advanced) => {
-        let getstr="";
-
-        let filter = params[0].name;
-        let filter_text = params[0].filter;
-
-        getstr = "https://api.hypothes.is/api/groups/arVX9DZ4/members";
-
-        const headers = {
-          'Accept': 'application/json',
-          'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',
+                break;
+            default:
+            // code block
         }
-        console.log("here");
+
+        let config = {
+          headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
+        };
 
         this.setState({loading: true}, () => {
-            axios.get(getstr, { headers: headers })
-                .then(result => this.setState({
-                    loading: false,
-                    posts: result.data.response,
-                    rowcount: result.data.response.length
-                }));
+            axios.get(getstr,config)
+              .then(function (result) {
+                    console.log(result);
+                    const grouped  = groupBy(result, "color");
+                    this.setState({
+                        loading: false,
+                        posts: result.data.response,
+                        rowcount: result.data.response.length
+                    });
+              })
+              .catch(function (error) {
+                    console.log(error);
+              });
+
         });
 
 
@@ -160,7 +193,7 @@ class Users extends Component {
 
     render() {
 
-        const { params } = this.props.match;
+
 
         const options = {
             onSearchChange: this.handleSearchChange.bind(this),
@@ -186,9 +219,9 @@ class Users extends Component {
                         <LoadSpinner/>
                     ) : (
                         <div className="container" style={{marginTop: 50}}>
+                            <GroupFilter onChange={this.handleFilterChange} />
                             <span className="badge badge-default">{this.state.posts.length} Records</span>
-                            <span className="badge badge-default">{this.state.rowCount}</span>
-                             <span className="badge badge-primary">User:{params.uid}</span>
+                            <span className="badge badge-default">{this.state.rowCount} Filtered</span>
                             <BootstrapTable
                                 filter={filterFactory()}
                                 striped
@@ -210,5 +243,5 @@ class Users extends Component {
         }
     }
 }
-export default Users;
+export default Groups;
 

@@ -9,6 +9,20 @@ import axios from "axios";
 import ViewDynamicSelect from "./ViewFilterSelector";
 import LoadSpinner from "./loading";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import GroupFilter from "./GroupFilter";
+
+const groupBy = (array, key) => {
+                      return array.reduce((result, currentValue) => {
+                        (result[eval('currentValue.'+key)] = result[eval('currentValue.'+key)] || []).push(
+                          currentValue
+                        );
+
+                        console.log(result);
+                        return result;
+                      }, {});
+                    };
+
+
 
 function rankFormatter(cell, row, rowIndex, formatExtraData) {
     return (
@@ -24,6 +38,46 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
         </div>
     ); }
 
+
+     let documents = [
+    {
+        dataField: 'uri',
+        text: 'uri',
+        sort: true,
+        filter: textFilter(),
+    },
+    {
+        dataField: 'commenters',
+        text: 'commenters',
+        sort: true,
+        filter: textFilter(),
+    }
+];
+let members = [{
+                dataField: 'userid',
+                text: 'userid',
+                filter: textFilter()
+            },
+            {
+                dataField: 'username',
+                text: 'username',
+                sort: true,
+                filter: textFilter(),
+            },
+            {
+                dataField: 'display_name',
+                text: 'display_name',
+                sort: true,
+                filter: textFilter(),
+            },
+            {
+                dataField: 'UserInfo',
+                isDummyField: true,
+                text: 'other pages',
+                formatter: rankFormatter,
+                sort: false,
+            },
+            ];
 
 
 class Groups extends Component {
@@ -90,26 +144,52 @@ class Groups extends Component {
         this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
     }
 
-    handleSelectChange = (params,filter_advanced) => {
-        let getstr="";
+    handleFilterChange = (value) =>{
+        console.log("filter change");
+        const { params } = this.props.match;
+        let getstr ="";
+        switch (value) {
+            case 'Members':
+                this.state.columns=members;
+                getstr = "https://api.hypothes.is/api/search?group="+this.props.state.groupId;
+                break;
+            case 'Documents':
+                this.state.columns=documents;
+                getstr = "https://api.hypothes.is/api/search?group="+this.props.state.groupId;
+                break;
+            case 'user':
 
-        let filter = params[0].name;
-        let filter_text = params[0].filter;
-
-        getstr = "https://api.hypothes.is/api/groups/arVX9DZ4/members";
-        const headers = {
-          'Accept': 'application/json',
-          'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',
+                break;
+            default:
+            // code block
         }
-        console.log("here");
+        console.log(getstr);
+
+        let config = {
+          headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
+        };
 
         this.setState({loading: true}, () => {
-            axios.get(getstr, { headers: headers })
-                .then(result => this.setState({
-                    loading: false,
-                    posts: result.data.response,
-                    rowcount: result.data.response.length
-                }));
+            axios.get(getstr,config)
+              .then(function (result) {
+                    console.log(result);
+
+                    console.log("reorg-1");
+                    const personGroupedByColor = groupBy(result.data.rows, "user");
+
+                    console.log("reorg-2");
+                    console.log(personGroupedByColor);
+                    console.log("reorg-3");
+                    this.setState({
+                        loading: false,
+                        posts: result.data.response,
+                        rowcount: result.data.response.length
+                    });
+              })
+              .catch(function (error) {
+                    console.log(error);
+              });
+
         });
 
 
@@ -143,6 +223,7 @@ class Groups extends Component {
                         <LoadSpinner/>
                     ) : (
                         <div className="container" style={{marginTop: 50}}>
+                            <GroupFilter onChange={this.handleFilterChange} />
                             <span className="badge badge-default">{this.state.posts.length} Records</span>
                             <span className="badge badge-default">{this.state.rowCount} Filtered</span>
                             <BootstrapTable
@@ -150,7 +231,7 @@ class Groups extends Component {
                                 striped
                                 filterPosition="top"
                                 bootstrap4={true}
-                                onDataSizeChange={this.handleDataChange}
+                                onDataSizeChange={this.handleFilterChange}
                                 hover
                                 keyField='pid'
                                 data={this.state.posts}

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './index.css';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.css';
+import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
 // Put any other imports below so that CSS from your
 // components takes precedence over default styles.
 import 'bootstrap/dist/css/bootstrap.min.css';

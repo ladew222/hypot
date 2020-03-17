@@ -9,6 +9,7 @@ import Settings from "./settings";
 import Select from 'react-select';
 import DyDrop from "./DropDown";
 import history from './history';
+import DyTree from "./tree";
 
 
 const Home = () => (
@@ -104,6 +105,7 @@ class App extends Component {
     render() {
         return (
             <div>
+                <DyTree/>
 
                 <nav className="navbar navbar-expand-lg navbar-light  bg-light">
                     <Link className="navbar-brand" to="/actions">Actions</Link>
@@ -124,7 +126,7 @@ class App extends Component {
                     <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
-                               <DyDrop onSelect={this.onChangeDrop} value={{group:this.state.group,groupId:this.state.groupId}} /><input type="text" value={this.state.key+"a"} autoFocus="autofocus" onChange={this.onIDChange}/>
+                            <DyDrop onChange={this.onChangeDrop} value={{group:this.state.group,groupId:this.state.groupId}} /><input type="text" value={this.state.key+"a"} autoFocus="autofocus" onChange={this.onIDChange}/>
                             </li>
                         </ul>
                     </div>
