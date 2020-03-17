@@ -8,6 +8,16 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import axios from "axios";
 
 
+const GroupedAnnotations = ({ qualifier, data }) => {
+  return (
+    <div>
+        {Object.keys(data).map(key => (
+        <li key={key}>eee{data[key].name}</li>
+      ))}
+
+    </div>
+  )
+}
 
 
 
@@ -63,7 +73,7 @@ class DyTree extends React.Component {
                 }));
         });
          console.log("it");
-          this.state.html =  [4,5,6,7,8];
+
 
 
     }
@@ -81,15 +91,23 @@ class DyTree extends React.Component {
         Object.keys(this.state.data).forEach(key => {
           let value = this.state.data[key];
           console.log("here");
-           itemList.push(<div/>);
+          console.log(value);
+           itemList.push(<div>aa{key}<GroupedAnnotations data={value} Qualifier={"aa"}/>aa</div>);
            x++;
         });
+
+
+
 
         return (
 
             <div>
             <span>{itemList}</span>
-            // RENDER THE COMPONENT
+
+
+
+
+
            <TreeView
 
       defaultCollapseIcon={<ExpandMoreIcon />}
