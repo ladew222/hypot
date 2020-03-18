@@ -20,12 +20,6 @@ class Pane extends Component {
 
     render() {
         return <div ref={ref => this.el = ref}>
-            <button onClick={() => this.setState({ isPaneOpen: true })}>Click me to open right pane!</button>
-            <div style={{ marginTop: '32px' }}>
-                <button onClick={ () => this.setState({ isPaneOpenLeft: true }) }>
-                    Click me to open left pane with 20% width!
-                </button>
-            </div>
             <SlidingPane
                 className='some-custom-class'
                 overlayClassName='some-custom-overlay-class'
@@ -40,16 +34,7 @@ class Pane extends Component {
                 } }>
                 <div>{this.props.ToggleValue }</div>
                 <br />
-                <img src='img.png' />
-            </SlidingPane>
-            <SlidingPane
-                closeIcon={<div>Some div containing custom close icon.</div>}
-                isOpen={ this.state.isPaneOpenLeft }
-                title='Hey, it is optional pane title.  I can be React component too.'
-                from='left'
-                width='200px'
-                onRequestClose={ () => this.setState({ isPaneOpenLeft: false }) }>
-                <div>And I am pane content on left.</div>
+
             </SlidingPane>
         </div>;
     }

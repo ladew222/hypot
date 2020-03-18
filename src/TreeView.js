@@ -121,8 +121,15 @@ class TreeView extends Component {
             },
             ]
     }
-    handleDataChange = ({ dataSize }) => {
-        this.setState({ rowCount: dataSize });
+    handleDataChange = ( tree ) => {
+        console.log("tree");
+        console.log(tree);
+
+        this.setState({
+                    loading: tree.loading,
+                    posts: tree.data,
+                    rowcount: tree.rowcount
+                })
     }
     componentDidMount() {
         //const user = useContext(UserContext);
@@ -133,20 +140,9 @@ class TreeView extends Component {
         var getstr = "";
 
         const { params } = this.props.match;
-        getstr="https://api.hypothes.is/api/groups/" + 'arVX9DZ4' +"/members";
-        var config = {
-          headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
-        };
+        console.log(this.props);
+        getstr="https://api.hypothes.is/api/groups/" + this.props.state.groupId +"/members";
 
-        axios.get(getstr, config)
-            .then(res => {
-                const posts = res.data;
-                this.setState({
-                    loading: false,
-                    posts: posts,
-                    rowcount: posts.length
-                })
-            });
     }
     handleSearchChange = (searchText, colInfos, multiColumnSearch) =>{
         //..
@@ -168,57 +164,7 @@ class TreeView extends Component {
 
     }
 
-    handleFilterChange = (value) =>{
-        console.log("filter change");
-        const { params } = this.props.match;
-        let getstr ="";
-        this.setState({filter_value: value});
-        switch (value) {
-            case 'Members':
-                this.state.columns=members;
-                getstr = "https://api.hypothes.is/api/search?group="+this.props.state.groupId;
-                break;
-            case 'Documents':
-                this.state.columns=documents;
-                getstr = "https://api.hypothes.is/api/search?group="+this.props.state.groupId;
-                break;
-            case 'user':
 
-                break;
-            default:
-            // code block
-        }
-        console.log(getstr);
-
-        let config = {
-          headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
-        };
-
-        this.setState({loading: true}, () => {
-            axios.get(getstr,config)
-              .then(function (result) {
-                    console.log(result);
-
-                    console.log("reorg-1");
-                    const personGroupedByColor = groupBy(result.data.rows, "user");
-
-                    console.log("reorg-2");
-                    console.log(personGroupedByColor);
-                    console.log("reorg-3");
-                    this.setState({
-                        loading: false,
-                        posts: result.data.response,
-                        rowcount: result.data.response.length
-                    });
-              })
-              .catch(function (error) {
-                    console.log(error);
-              });
-
-        });
-
-
-    }
 
     render() {
 
@@ -231,13 +177,13 @@ class TreeView extends Component {
         const { posts, loading } = this.state;
 
 
-        if( !this.state.posts) {
+        if( 1==2) {
             // Note that you can return false it you want nothing to be put in the dom
             // This is also your chance to render a spinner or something...
             return <div>The responsive it not here yet!</div>
         }
 
-        if ( this.state.posts.length === 0 ) {
+        if ( 1==21 ) {
             return <div>No result found </div>;
         }
         else {
@@ -251,9 +197,9 @@ class TreeView extends Component {
                         <div className="container" style={{marginTop: 50}}>
                               <Pane Toggle={this.state.pane_open} onClose={this.onClosePane} ToggleValue={this.state.pane_value}/>
                             <GroupFilter onChange={this.handleFilterChange} />
-                            <span className="badge badge-default">{this.state.posts.length} Records</span>
+                            <span className="badge badge-default">{ this.state.posts ? this.state.posts.length  : "0" } Records</span>
                             <span className="badge badge-default">{this.state.rowCount} Filtered</span>
-                            <DyTree onPanelClick={this.togglePane}/>
+                            <DyTree onPanelClick={this.togglePane} updateTree={this.handleDataChange}/>
                         </div>
 
                     )}

@@ -43,12 +43,12 @@ class GroupFilter extends Component{
                             <ToggleButtonGroup
                                 type='radio'
                                 name='genre'
-                                defaultValue={['all']}
+                                defaultValue={['Users']}
                                 onChange={this.props.onChange}
                             >
-                                <ToggleButton value={'Members'}>Members</ToggleButton>
-                                <ToggleButton value={'Documents'}>Documents</ToggleButton>
-                                <ToggleButton value={'merged'}>Merged</ToggleButton>
+                                <ToggleButton value={'Users'}>By Users</ToggleButton>
+                                <ToggleButton value={'Document'}>By Document</ToggleButton>
+                                <ToggleButton value={'Week'}>By Week</ToggleButton>
                             </ToggleButtonGroup>
                         </div>
                     </div>

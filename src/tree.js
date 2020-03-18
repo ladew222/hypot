@@ -17,13 +17,14 @@ const StyledAnnotation = ({data,click_handler}) => {
     console.log("out");
     const create_date = new moment(data.created).format('DD/MM/YYYY');
     const modify_date = new moment(data.updated).format('DD/MM/YYYY');
+    const extra = data.text.length>20 ? "..." : ""
   return (
       <div className="blurb">
           <div className="row">
               <div className="col-6"><a href={data.links.incontext}>{data.uri}</a></div>
               <div className="col-2">{create_date}</div>
               <div className="col-2">{modify_date}</div>
-              <div className="col-2">{<input type="button" value={data.text} onClick={click_handler} />}</div>
+              <div className="col-2">{data.text.substring(0,38)+ extra }</div>
           </div>
       </div>
 
@@ -37,7 +38,7 @@ const GroupedAnnotations = ({ data,click_handler}) => {
   return (
     <div>
         {Object.keys(data).map(key => (
-            <TreeItem onKeyDown={() => click_handler(data[key].id)} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
+            <TreeItem onKeyDown={() => click_handler(data[key].text)} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
       ))}
 
     </div>
@@ -64,11 +65,13 @@ class DyTree extends React.Component {
     constructor() {
         super();
         // SET YOUR DATA
+        this.setState({
+                        loading: false,
+                        data:[],
+                        rowcount:0,
+                    })
 
 
-        this.state = {
-            data: []
-        };
     }
     componentDidMount() {
         let config = {
@@ -82,12 +85,19 @@ class DyTree extends React.Component {
                     const ee =groupBy(response.data.rows,"user");
                     return (ee);
                   })
-                .then(
-                    result => this.setState({
-                    loading: false,
-                    data: result,
-                    rowcount: result.length
-                }));
+                .then(result => {
+                    //...
+                    this.setState({
+                        loading: false,
+                        data: result,
+                        rowcount:Object.keys(result).length,
+                    })
+                  })
+                .then(response2 => {
+                    //...
+                    this.props.updateTree(this.state);
+                });
+
         });
          console.log("it");
 
@@ -105,21 +115,23 @@ class DyTree extends React.Component {
 
     render() {
 
-
-        console.log("PreData:");
-        console.log(this.state.data);
-        console.log('======= Object.keys ==========');
-
         let itemList=[];
-        let x=0;
-        Object.keys(this.state.data).forEach(key => {
-          let value = this.state.data[key];
-          console.log("here");
-          console.log(value);
-            itemList.push(<TreeItem nodeId={'g-'+x.toString()} label={key}><GroupedAnnotations data={value} click_handler={this.handleClick}  /></TreeItem>);
-        });
-        console.log("array");
-        console.log(itemList);
+        if(this.state && this.state.rowcount>0){
+            let x=0;
+            Object.keys(this.state.data).forEach(key => {
+              let value = this.state.data[key];
+              console.log("here");
+              console.log(value);
+                itemList.push(<TreeItem nodeId={'g-'+x.toString()} label={key}><GroupedAnnotations data={value} click_handler={this.handleClick}  /></TreeItem>);
+            });
+            console.log("array");
+            console.log(itemList);
+        }
+        else{
+
+        }
+
+
 
         return (
 
@@ -141,7 +153,7 @@ class DyTree extends React.Component {
       <TreeItem nodeId="3" label="Chrome" />
       <TreeItem nodeId="4" label="Webstorm" />
       </TreeItem>
-       {itemList}
+        {itemList}
     </TreeView>
             </div>
         );
