@@ -4,22 +4,42 @@ import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
-
+import * as moment from 'moment'
 import axios from "axios";
 
+
+const StyledAnnotation = (data) => {
+    console.log('iiiin');
+    console.log(data);
+    console.log(data.data.id);
+    const create_date = new moment(data.data.created).format('DD/MM/YYYY');
+    const modify_date = new moment(data.data.updated).format('DD/MM/YYYY');
+  return (
+      <div className="blurb">
+          <div className="row">
+              <div className="col-8"><a href={data.data.links.incontext}>{data.data.uri}</a></div>
+              <div className="col-2">{create_date}</div>
+              <div className="col-2">{modify_date}</div>
+          </div>
+      </div>
+
+  )
+}
 
 const GroupedAnnotations = ({ qualifier, data,cnt }) => {
     console.log("data");
     console.log(data);
+    console.log(data);
   return (
     <div>
         {Object.keys(data).map(key => (
-            <TreeItem nodeId={data[key].id} label={data[key].uri} />
+            <TreeItem nodeId={data[key].id} label={<StyledAnnotation data={data[key]}/>} />
       ))}
 
     </div>
   )
 }
+
 
 
 
