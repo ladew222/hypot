@@ -82,6 +82,15 @@ let members = [{
 
 class TreeView extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            pane_open: false
+        };
+
+    }
+
 
 
     state = {
@@ -147,10 +156,15 @@ class TreeView extends Component {
         //..
         console.log("click up");
         console.log(value);
-        this.setState({
-            pane_value: value,
-            pane_open: true,
-        })
+        this.setState(prevState => ({
+          pane_open: !prevState.pane_open,
+            pane_value: value.toString(),
+        }));
+
+    }
+     onClosePane = () =>{
+        //..
+        this.setState({pane_open: false});
 
     }
 
@@ -235,7 +249,7 @@ class TreeView extends Component {
                     ) : (
 
                         <div className="container" style={{marginTop: 50}}>
-                              <Pane Toggle={this.state.pane_open} ToggleValue={this.state.pane_value}/>
+                              <Pane Toggle={this.state.pane_open} onClose={this.onClosePane} ToggleValue={this.state.pane_value}/>
                             <GroupFilter onChange={this.handleFilterChange} />
                             <span className="badge badge-default">{this.state.posts.length} Records</span>
                             <span className="badge badge-default">{this.state.rowCount} Filtered</span>

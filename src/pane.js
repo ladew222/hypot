@@ -29,15 +29,16 @@ class Pane extends Component {
             <SlidingPane
                 className='some-custom-class'
                 overlayClassName='some-custom-overlay-class'
-                isOpen={ this.props.Toggle }
-                title='Hey, it is optional pane title.  I can be React component too.'
+                isOpen={ this.props.Toggle}
+                title='Text'
                 subtitle='Optional subtitle.'
                 width='250px'
                 onRequestClose={ () => {
                     // triggered on "<" on left top click or on outside click
                     this.setState({ isPaneOpen: false });
+                    this.props.onClose();
                 } }>
-                <div>And I am pane content. BTW, what rocks?</div>
+                <div>{this.props.ToggleValue }</div>
                 <br />
                 <img src='img.png' />
             </SlidingPane>

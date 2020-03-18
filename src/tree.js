@@ -37,7 +37,7 @@ const GroupedAnnotations = ({ data,click_handler}) => {
   return (
     <div>
         {Object.keys(data).map(key => (
-            <TreeItem onKeyDown={click_handler} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
+            <TreeItem onKeyDown={() => click_handler(data[key].id)} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
       ))}
 
     </div>
@@ -94,10 +94,12 @@ class DyTree extends React.Component {
 
 
     }
-     handleClick = (value) =>
+     handleClick = (event) =>
     {
         console.log("click happened");
-        this.props.onPanelClick(value);
+        console.log(event);
+        console.log(event.target);
+        this.props.onPanelClick(event);
     }
 
 
