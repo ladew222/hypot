@@ -10,6 +10,8 @@ import Select from 'react-select';
 import DyDrop from "./DropDown";
 import history from './history';
 import DyTree from "./tree";
+import Pane from "./pane"
+import TreeView from "./TreeView";
 
 
 const Home = () => (
@@ -105,8 +107,6 @@ class App extends Component {
     render() {
         return (
             <div>
-                <DyTree/>
-
                 <nav className="navbar navbar-expand-lg navbar-light  bg-light">
                     <Link className="navbar-brand" to="/actions">Actions</Link>
                     <ul className="navbar-nav">
@@ -122,6 +122,9 @@ class App extends Component {
                          <li className="nav-item">
                              <Link className="nav-link" to="/settings">Settings</Link>
                         </li>
+                         <li className="nav-item">
+                             <Link className="nav-link" to="/tree">Tree</Link>
+                        </li>
                     </ul>
                     <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                         <ul className="navbar-nav ml-auto">
@@ -133,6 +136,7 @@ class App extends Component {
                 </nav>
                 <Route path="/users/:uid?" render={(props) => <Users {...props} state={this.state} />} />
                 <Route path="/groups/:gid?" render={(props) => <Groups {...props} state={this.state} />} />
+                <Route path="/tree/:gid?/:uid?" render={(props) => <TreeView {...props} state={this.state} />} />
                 <Route path="/settings" render={(props) => <Settings {...props} onSubmit={this.settingsChange} state={this.state} />} />
             </div>
 

@@ -1,8 +1,6 @@
 import React, { Component, useContext  } from 'react';
 import { Button } from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import BootstrapTable from 'react-bootstrap-table-next';
-import Dialog from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import filterFactory, {dateFilter, textFilter} from 'react-bootstrap-table2-filter';
 import axios from "axios";
@@ -11,6 +9,7 @@ import LoadSpinner from "./loading";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import GroupFilter from "./GroupFilter";
 import Pane from "./pane";
+import DyTree from "./tree";
 
 const groupBy = (array, key) => {
                       return array.reduce((result, currentValue) => {
@@ -81,7 +80,7 @@ let members = [{
             ];
 
 
-class Groups extends Component {
+class TreeView extends Component {
 
 
 
@@ -144,11 +143,22 @@ class Groups extends Component {
         //..
         this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
     }
+    togglePane = (value) =>{
+        //..
+        console.log("click up");
+        console.log(value);
+        this.setState({
+            pane_value: value,
+            pane_open: true,
+        })
+
+    }
 
     handleFilterChange = (value) =>{
         console.log("filter change");
         const { params } = this.props.match;
         let getstr ="";
+        this.setState({filter_value: value});
         switch (value) {
             case 'Members':
                 this.state.columns=members;
@@ -225,20 +235,11 @@ class Groups extends Component {
                     ) : (
 
                         <div className="container" style={{marginTop: 50}}>
+                              <Pane Toggle={this.state.pane_open} ToggleValue={this.state.pane_value}/>
                             <GroupFilter onChange={this.handleFilterChange} />
                             <span className="badge badge-default">{this.state.posts.length} Records</span>
                             <span className="badge badge-default">{this.state.rowCount} Filtered</span>
-                            <BootstrapTable
-                                filter={filterFactory()}
-                                striped
-                                filterPosition="top"
-                                bootstrap4={true}
-                                onDataSizeChange={this.handleFilterChange}
-                                hover
-                                keyField='pid'
-                                data={this.state.posts}
-                                columns={this.state.columns}>
-                            </BootstrapTable>
+                            <DyTree onPanelClick={this.togglePane}/>
                         </div>
 
                     )}
@@ -249,5 +250,5 @@ class Groups extends Component {
         }
     }
 }
-export default Groups;
+export default TreeView;
 

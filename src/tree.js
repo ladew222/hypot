@@ -6,34 +6,38 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 import * as moment from 'moment'
 import axios from "axios";
+import { Manager, Reference, Popper } from 'react-popper';
 
 
-const StyledAnnotation = (data) => {
+
+const StyledAnnotation = ({data,click_handler}) => {
     console.log('iiiin');
     console.log(data);
-    console.log(data.data.id);
-    const create_date = new moment(data.data.created).format('DD/MM/YYYY');
-    const modify_date = new moment(data.data.updated).format('DD/MM/YYYY');
+    console.log(data.uri);
+    console.log("out");
+    const create_date = new moment(data.created).format('DD/MM/YYYY');
+    const modify_date = new moment(data.updated).format('DD/MM/YYYY');
   return (
       <div className="blurb">
           <div className="row">
-              <div className="col-8"><a href={data.data.links.incontext}>{data.data.uri}</a></div>
+              <div className="col-6"><a href={data.links.incontext}>{data.uri}</a></div>
               <div className="col-2">{create_date}</div>
               <div className="col-2">{modify_date}</div>
+              <div className="col-2">{<input type="button" value={data.text} onClick={click_handler} />}</div>
           </div>
       </div>
 
   )
 }
 
-const GroupedAnnotations = ({ qualifier, data,cnt }) => {
+const GroupedAnnotations = ({ data,click_handler}) => {
     console.log("data");
     console.log(data);
     console.log(data);
   return (
     <div>
         {Object.keys(data).map(key => (
-            <TreeItem nodeId={data[key].id} label={<StyledAnnotation data={data[key]}/>} />
+            <TreeItem onKeyDown={click_handler} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
       ))}
 
     </div>
@@ -41,15 +45,6 @@ const GroupedAnnotations = ({ qualifier, data,cnt }) => {
 }
 
 
-
-
-const useStyles = makeStyles({
-  root: {
-    height: 240,
-    flexGrow: 1,
-    maxWidth: 400,
-  },
-});
 
 
 
@@ -99,13 +94,18 @@ class DyTree extends React.Component {
 
 
     }
+     handleClick = (value) =>
+    {
+        console.log("click happened");
+        this.props.onPanelClick(value);
+    }
+
 
     render() {
 
 
-        console.log("data:");
+        console.log("PreData:");
         console.log(this.state.data);
-        console.log("Len:");
         console.log('======= Object.keys ==========');
 
         let itemList=[];
@@ -114,7 +114,7 @@ class DyTree extends React.Component {
           let value = this.state.data[key];
           console.log("here");
           console.log(value);
-            itemList.push(<TreeItem nodeId={'g-'+x.toString()} label={key}><GroupedAnnotations data={value}  Qualifier={"aa"}/></TreeItem>);
+            itemList.push(<TreeItem nodeId={'g-'+x.toString()} label={key}><GroupedAnnotations data={value} click_handler={this.handleClick}  /></TreeItem>);
         });
         console.log("array");
         console.log(itemList);
