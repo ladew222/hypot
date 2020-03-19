@@ -88,6 +88,7 @@ class TreeView extends Component {
         this.state = {
             pane_open: false,
             filter:'Users',
+            pane_values: {text:'',user:'',created:'',updated:'',uri:''}
         };
 
     }
@@ -158,7 +159,7 @@ class TreeView extends Component {
         console.log(value);
         this.setState(prevState => ({
           pane_open: !prevState.pane_open,
-            pane_value: value.toString(),
+            pane_values: {text:value.text.toString(),user:value.user.toString(),created:value.created.toString(),updated:value.updated.toString(),uri:value.uri.toString()},
         }));
 
     }
@@ -179,7 +180,7 @@ class TreeView extends Component {
         return (
             <div>
                     <div className="container" style={{marginTop: 50}}>
-                          <Pane Toggle={this.state.pane_open} onClose={this.onClosePane} ToggleValue={this.state.pane_value}/>
+                          <Pane Toggle={this.state.pane_open} onClose={this.onClosePane} info={this.state.pane_values}/>
                         <GroupFilter onChange={this.handleFilterChange} />
                         <span className="badge badge-default">{ this.state.rowcount ? this.state.rowcount  : "0" } Records</span>
                         <span className="badge badge-default">{this.state.rowCount} Filtered</span>

@@ -17,7 +17,7 @@ const StyledAnnotation = ({data,click_handler}) => {
     console.log("out");
     const create_date = new moment(data.created).format('DD/MM/YYYY');
     const modify_date = new moment(data.updated).format('DD/MM/YYYY');
-    const extra = data.text.length>20 ? "..." : ""
+    const extra = data.text.length>38 ? "..." : ""
   return (
       <div className="blurb">
           <div className="row">
@@ -39,7 +39,7 @@ const GroupedAnnotations = ({ data,click_handler}) => {
   return (
     <div>
         {Object.keys(data).map(key => (
-            <TreeItem onKeyDown={() => click_handler(data[key].text)} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
+            <TreeItem onKeyDown={() => click_handler({text: data[key].text,updated: data[key].updated,user:data[key].user,created:data[key].created,uri:data[key].uri})} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
       ))}
 
     </div>
