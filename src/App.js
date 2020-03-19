@@ -109,19 +109,15 @@ class App extends Component {
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light  bg-light">
-                    <Link className="navbar-brand" to="/actions">Actions</Link>
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/predictions">Predictions</Link>
-                        </li>
-                        <li className="nav-item">
-                             <Link className="nav-link" to="/groups">Group</Link>
-                        </li>
-                         <li className="nav-item">
-                             <Link className="nav-link" to="/settings">Settings</Link>
+                             <Link className="nav-link" to="/groups">Table</Link>
                         </li>
                          <li className="nav-item">
                              <Link className="nav-link" to="/tree">Tree</Link>
+                        </li>
+                        <li className="nav-item">
+                             <Link className="nav-link" to="/settings">Settings</Link>
                         </li>
                     </ul>
                     <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">

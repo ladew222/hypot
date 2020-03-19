@@ -85,7 +85,7 @@ class Users extends Component {
             {
                 dataField: 'Document2',
                 isDummyField: true,
-                text: 'Document2',
+                text: 'Document Annotations',
                 formatter: rankFormatter2,
                 sort: false,
             },
