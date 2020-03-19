@@ -21,10 +21,11 @@ const StyledAnnotation = ({data,click_handler}) => {
   return (
       <div className="blurb">
           <div className="row">
-              <div className="col-6"><a href={data.links.incontext}>{data.uri}</a></div>
-              <div className="col-2">{create_date}</div>
-              <div className="col-2">{modify_date}</div>
-              <div className="col-2">{data.text.substring(0,38)+ extra }</div>
+              <div className="col-5"><a href={data.links.incontext}>{data.uri}</a></div>
+              <div className="col-2">{data.user.substring(5)}</div>
+              <div className="col-1">{create_date}</div>
+              <div className="col-1">{modify_date}</div>
+              <div className="col-3">{data.text.substring(0,38)+ extra }</div>
           </div>
       </div>
 
