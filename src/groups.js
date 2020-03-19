@@ -61,11 +61,23 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
         sort: true,
         filter: textFilter(),
     },
+     {
+        dataField: 'user',
+        text: 'user',
+        sort: true,
+        filter: textFilter(),
+    },
     {
         dataField: 'text',
         text: 'text',
         sort: true,
         filter: textFilter(),
+    },
+    {
+        dataField: 'updated',
+        text: 'Updat',
+        sort: true,
+        filter: dateFilter(),
     }
 ];
 let members = [{
@@ -79,12 +91,7 @@ let members = [{
                 sort: true,
                 filter: textFilter(),
             },
-            {
-                dataField: 'display_name',
-                text: 'display_name',
-                sort: true,
-                filter: textFilter(),
-            },
+
             {
                 dataField: 'UserInfo',
                 isDummyField: true,
@@ -113,12 +120,6 @@ class Groups extends Component {
                 filter: textFilter(),
             },
 
-            {
-                dataField: 'display_name',
-                text: 'display_name',
-                sort: true,
-                filter: textFilter(),
-            },
             {
                 dataField: 'UserInfo',
                 isDummyField: true,
@@ -186,13 +187,24 @@ class Groups extends Component {
         console.log("here");
         axios.get(getstr, config)
             .then(res => {
-                const posts = res.data.rows;
-                console.log(posts);
-                this.setState({
-                    loading: false,
-                    posts: posts,
-                    rowcount: posts.length
-                })
+                if (value=='All'){
+                    const posts = res.data.rows;
+                    console.log(posts);
+                    this.setState({
+                        loading: false,
+                        posts: posts,
+                        rowcount: posts.length
+                    })
+                }
+                else{
+                    const posts = res.data;
+                    this.setState({
+                        loading: false,
+                        posts: posts,
+                        rowcount: posts.length
+                    })
+                }
+
             });
 
     }
