@@ -39,8 +39,22 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
         </div>
     ); }
 
+   function rankFormatter2(cell, row, rowIndex, formatExtraData) {
+    return (
+        < div id={`${row.url}-dropdown`}
+            style={{ textAlign: "center",
+                cursor: "pointer",
+                lineHeight: "normal" }}>
+            <a href={`/users/${row.url}`} >{row.username} </a>
+            < div
+                style={{ fontSize: 20 }}
+                color="disabled"
+            />
+        </div>
+    ); }
 
-     let documents = [
+
+     let all = [
     {
         dataField: 'uri',
         text: 'uri',
@@ -48,8 +62,8 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
         filter: textFilter(),
     },
     {
-        dataField: 'commenters',
-        text: 'commenters',
+        dataField: 'text',
+        text: 'text',
         sort: true,
         filter: textFilter(),
     }
@@ -98,6 +112,7 @@ class Groups extends Component {
                 sort: true,
                 filter: textFilter(),
             },
+
             {
                 dataField: 'display_name',
                 text: 'display_name',
@@ -123,9 +138,8 @@ class Groups extends Component {
         //console.log(context);
         //this.context ="eeee";
         var getstr = "";
-
         const { params } = this.props.match;
-        getstr="https://api.hypothes.is/api/groups/" + 'arVX9DZ4' +"/members";
+        getstr="https://api.hypothes.is/api/groups/" + this.props.state.groupId +"/members";
         var config = {
           headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
         };
@@ -150,49 +164,36 @@ class Groups extends Component {
         const { params } = this.props.match;
         let getstr ="";
         switch (value) {
-            case 'Members':
+            case 'Users':
                 this.state.columns=members;
-                getstr = "https://api.hypothes.is/api/search?group="+this.props.state.groupId;
+                getstr="https://api.hypothes.is/api/groups/" + this.props.state.groupId +"/members";
                 break;
-            case 'Documents':
-                this.state.columns=documents;
+            case 'All':
+                this.state.columns=all;
                 getstr = "https://api.hypothes.is/api/search?group="+this.props.state.groupId;
-                break;
-            case 'user':
-
                 break;
             default:
             // code block
         }
-        console.log(getstr);
-
-        let config = {
+        //const user = useContext(UserContext);
+        //console.log(user.name);
+        //let context = this.context;
+        //console.log(context);
+        //this.context ="eeee";
+        var config = {
           headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
         };
-
-        this.setState({loading: true}, () => {
-            axios.get(getstr,config)
-              .then(function (result) {
-                    console.log(result);
-
-                    console.log("reorg-1");
-                    const personGroupedByColor = groupBy(result.data.rows, "user");
-
-                    console.log("reorg-2");
-                    console.log(personGroupedByColor);
-                    console.log("reorg-3");
-                    this.setState({
-                        loading: false,
-                        posts: result.data.response,
-                        rowcount: result.data.response.length
-                    });
-              })
-              .catch(function (error) {
-                    console.log(error);
-              });
-
-        });
-
+        console.log("here");
+        axios.get(getstr, config)
+            .then(res => {
+                const posts = res.data.rows;
+                console.log(posts);
+                this.setState({
+                    loading: false,
+                    posts: posts,
+                    rowcount: posts.length
+                })
+            });
 
     }
 

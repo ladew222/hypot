@@ -12,6 +12,7 @@ import history from './history';
 import DyTree from "./tree";
 import Pane from "./pane"
 import TreeView from "./TreeView";
+import Document from "./documents";
 
 
 const Home = () => (
@@ -114,9 +115,6 @@ class App extends Component {
                             <Link className="nav-link" to="/predictions">Predictions</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/users">Users</Link>
-                        </li>
-                        <li className="nav-item">
                              <Link className="nav-link" to="/groups">Group</Link>
                         </li>
                          <li className="nav-item">
@@ -135,6 +133,7 @@ class App extends Component {
                     </div>
                 </nav>
                 <Route path="/users/:uid?" render={(props) => <Users {...props} state={this.state} />} />
+                <Route path="/document/:uri?" render={(props) => <Document {...props} state={this.state} />} />
                 <Route path="/groups/:gid?" render={(props) => <Groups {...props} state={this.state} />} />
                 <Route path="/tree/:gid?/:uid?" render={(props) => <TreeView {...props} state={this.state} />} />
                 <Route path="/settings" render={(props) => <Settings {...props} onSubmit={this.settingsChange} state={this.state} />} />

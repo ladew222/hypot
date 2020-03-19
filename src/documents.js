@@ -26,23 +26,9 @@ function rankFormatter(cell, row, rowIndex, formatExtraData) {
         </div>
     ); }
 
-function rankFormatter2(cell, row, rowIndex, formatExtraData) {
-        const enc_uri = encodeURIComponent(row.uri);
-    return (
-        < div id={`${row.uri}-dropdown`}
-            style={{ textAlign: "center",
-                cursor: "pointer",
-                lineHeight: "normal" }}>
-            <a href={`/document/`+enc_uri} >{row.uri} </a>
-            < div
-                style={{ fontSize: 20 }}
-                color="disabled"
-            />
-        </div>
-    ); }
 
 
-class Users extends Component {
+class Document extends Component {
 
 
 
@@ -83,13 +69,6 @@ class Users extends Component {
                 sort: false,
             },
             {
-                dataField: 'Document2',
-                isDummyField: true,
-                text: 'Document2',
-                formatter: rankFormatter2,
-                sort: false,
-            },
-            {
                 dataField: 'text',
                 text: 'text',
                 sort: true,
@@ -107,9 +86,12 @@ class Users extends Component {
         //console.log(context);
         //this.context ="eeee";
         var getstr = "";
+        console.log("mounting");
 
         const { params } = this.props.match;
-        getstr="https://api.hypothes.is/api/search?user="+params.uid;
+        console.log("params");
+        console.log(params);
+        getstr="https://api.hypothes.is/api/search?uri="+params.uri;
         var config = {
           headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
         };
@@ -121,17 +103,16 @@ class Users extends Component {
                 Object.keys(res.data.rows).forEach(function (item) {
                     console.log(item); // key
                     console.log(res.data.rows[item]); // value
-                    new_arr.push({title: res.data.rows[item].document.title,link: res.data.rows[item].links.html,created:res.data.rows[item].created,text:res.data.rows[item].text,uri:res.data.rows[item].uri})
+                    new_arr.push({title: res.data.rows[item].document.title,link: res.data.rows[item].links.html,created:res.data.rows[item].created,text:res.data.rows[item].text})
                 });
                 axios.get("https://api.hypothes.is/api/users/"+ params.uid, config)
                     .then(res => {
                         const posts = res.data.rows;
                         let new_arr=[];
                         Object.keys(res.data.rows).forEach(function (item) {
-                            console.log("item");
                             console.log(item); // key
                             console.log(res.data.rows[item]); // value
-                            new_arr.push({title: res.data.rows[item].document.title,link: res.data.rows[item].links.html,created:res.data.rows[item].created,text:res.data.rows[item].text,uri:res.data.rows[item].uri})
+                            new_arr.push({title: res.data.rows[item].document.title,link: res.data.rows[item].links.html,created:res.data.rows[item].created,text:res.data.rows[item].text})
                         });
                         this.setState({
                             loading: false,
@@ -190,8 +171,7 @@ class Users extends Component {
         };
         const { posts, loading } = this.state;
 
-        console.log("posts");
-        console.log(posts);
+
         if( !this.state.posts) {
             // Note that you can return false it you want nothing to be put in the dom
             // This is also your chance to render a spinner or something...
@@ -209,7 +189,7 @@ class Users extends Component {
                         <LoadSpinner/>
                     ) : (
                         <div className="container" style={{marginTop: 50}}>
-                            <h2>User View</h2>
+                            <h2>Document View</h2>
                             <span className="badge badge-default">{this.state.posts.length} Records</span>
                             <span className="badge badge-default">{this.state.rowCount}</span>
                              <span className="badge badge-primary">User:{params.uid}</span>
@@ -234,5 +214,5 @@ class Users extends Component {
         }
     }
 }
-export default Users;
+export default Document;
 

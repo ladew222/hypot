@@ -48,7 +48,7 @@ class GroupFilter extends Component{
                             >
                                 <ToggleButton value={'Users'}>By Users</ToggleButton>
                                 <ToggleButton value={'Document'}>By Document</ToggleButton>
-                                <ToggleButton value={'Week'}>By Week</ToggleButton>
+                                <ToggleButton value={'All'}>By All</ToggleButton>
                             </ToggleButtonGroup>
                         </div>
                     </div>
