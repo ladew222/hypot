@@ -179,6 +179,7 @@ class TreeView extends Component {
 
         return (
             <div>
+                <h2>Treeview--for details select and press a key</h2>
                     <div className="container" style={{marginTop: 50}}>
                           <Pane Toggle={this.state.pane_open} onClose={this.onClosePane} info={this.state.pane_values}/>
                         <GroupFilter onChange={this.handleFilterChange} />

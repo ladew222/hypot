@@ -15,16 +15,16 @@ const StyledAnnotation = ({data,click_handler}) => {
     console.log(data);
     console.log(data.uri);
     console.log("out");
-    const create_date = new moment(data.created).format('DD/MM/YYYY');
-    const modify_date = new moment(data.updated).format('DD/MM/YYYY');
+    const create_date = new moment(data.created).format('MM/DD');
+    const modify_date = new moment(data.updated).format('MM/DD');
     const extra = data.text.length>38 ? "..." : ""
   return (
       <div className="blurb"><div className="row">
-              <div className="col-5"><a href={data.links.incontext}>{data.uri}</a></div>
+              <div className="col-6"><a href={data.links.incontext}>{data.uri}</a></div>
               <div className="col-2">{data.user.substring(5)}</div>
               <div className="col-1">{create_date}</div>
               <div className="col-1">{modify_date}</div>
-              <div className="col-3">{data.text.substring(0,38)+ extra }</div>
+              <div className="col-2">{data.text.substring(0,38)+ extra }</div>
           </div>
 
       </div>
