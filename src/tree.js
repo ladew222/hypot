@@ -73,13 +73,78 @@ class DyTree extends React.Component {
 
 
     }
+    componentDidUpdate(prevProps) {
+      let getstr="";
+      console.log("got update--");
+      let search_key="";
+      console.log(prevProps.filter);
+      console.log("=");
+      console.log(this.props.filter);
+
+      if (this.props.filter !== prevProps.filter) {
+         console.log("--got update2--");
+         let config = {
+          headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
+         };
+         //rerun query
+         console.log("swtich");
+         console.log(this.props.filter);
+         switch (this.props.filter) {
+            case 'Users':
+                //this.state.columns=Users;
+                getstr = "https://api.hypothes.is/api/search?group="+this.props.Super.state.groupId;
+                search_key="user";
+                break;
+            case 'Document':
+               // this.state.columns=Documents;
+                getstr = "https://api.hypothes.is/api/search?group="+this.props.Super.state.groupId;
+                search_key="uri";
+                break;
+            case 'Week':
+                //this.state.columns=Week;
+                getstr = "https://api.hypothes.is/api/search?group="+this.props.Super.state.groupId;
+                search_key="user";
+                break;
+            case 'user':
+
+                break;
+            default:
+            // code block
+        }
+         console.log("running::");
+         console.log(getstr);
+         this.setState({loading: true}, () => {
+            axios.get(getstr, config)
+                .then(response => {
+                    //...
+                    const ee =groupBy(response.data.rows,search_key);
+                    return (ee);
+                  })
+                .then(result => {
+                    //...
+                    this.setState({
+                        loading: false,
+                        data: result,
+                        rowcount:Object.keys(result).length,
+                    })
+                  })
+                .then(response2 => {
+                    //...
+                    this.props.updateTree(this.state);
+                });
+
+        });
+         console.log("it");
+      }
+    }
     componentDidMount() {
         let config = {
           headers: {'Accept': 'application/json',  'Authorization':  'Bearer 6879-lEKYN1uJ5X_gTVo5u6avX4-jAbUcY0EMFoKsakPIfug',}
         };
-
+        console.log("this.props");
+        console.log(this.props);
          this.setState({loading: true}, () => {
-            axios.get("https://api.hypothes.is/api/search?group=arVX9DZ4", config)
+            axios.get("https://api.hypothes.is/api/search?group="+this.props.Super.state.groupId, config)
                 .then(response => {
                     //...
                     const ee =groupBy(response.data.rows,"user");
@@ -148,11 +213,7 @@ class DyTree extends React.Component {
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
     >
-      <TreeItem nodeId="1" label="Applications">
-      <TreeItem nodeId="2" label="Calendar" />
-      <TreeItem nodeId="3" label="Chrome" />
-      <TreeItem nodeId="4" label="Webstorm" />
-      </TreeItem>
+
         {itemList}
     </TreeView>
             </div>

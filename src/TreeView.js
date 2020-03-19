@@ -86,7 +86,8 @@ class TreeView extends Component {
         super(props);
 
         this.state = {
-            pane_open: false
+            pane_open: false,
+            filter:'Users',
         };
 
     }
@@ -144,9 +145,12 @@ class TreeView extends Component {
         getstr="https://api.hypothes.is/api/groups/" + this.props.state.groupId +"/members";
 
     }
-    handleSearchChange = (searchText, colInfos, multiColumnSearch) =>{
+    handleFilterChange = (value) =>{
         //..
-        this.refs.getTableDataIgnorePaging();  //'this' is undefined and I have no idea, how do I get current cell values
+        console.log("filter sent");
+        console.log(value);
+        this.setState({filter: value});
+
     }
     togglePane = (value) =>{
         //..
@@ -168,46 +172,24 @@ class TreeView extends Component {
 
     render() {
 
-
-
-        const options = {
-            onSearchChange: this.handleSearchChange.bind(this),
-            onFilterChange : this.handleSearchChange.bind(this)
-        };
         const { posts, loading } = this.state;
 
 
-        if( 1==2) {
-            // Note that you can return false it you want nothing to be put in the dom
-            // This is also your chance to render a spinner or something...
-            return <div>The responsive it not here yet!</div>
-        }
 
-        if ( 1==21 ) {
-            return <div>No result found </div>;
-        }
-        else {
-
-            return (
-                <div>
-                    {loading ? (
-                        <LoadSpinner/>
-                    ) : (
-
-                        <div className="container" style={{marginTop: 50}}>
-                              <Pane Toggle={this.state.pane_open} onClose={this.onClosePane} ToggleValue={this.state.pane_value}/>
-                            <GroupFilter onChange={this.handleFilterChange} />
-                            <span className="badge badge-default">{ this.state.posts ? this.state.posts.length  : "0" } Records</span>
-                            <span className="badge badge-default">{this.state.rowCount} Filtered</span>
-                            <DyTree onPanelClick={this.togglePane} updateTree={this.handleDataChange}/>
-                        </div>
-
-                    )}
-                </div>
+        return (
+            <div>
+                    <div className="container" style={{marginTop: 50}}>
+                          <Pane Toggle={this.state.pane_open} onClose={this.onClosePane} ToggleValue={this.state.pane_value}/>
+                        <GroupFilter onChange={this.handleFilterChange} />
+                        <span className="badge badge-default">{ this.state.rowcount ? this.state.rowcount  : "0" } Records</span>
+                        <span className="badge badge-default">{this.state.rowCount} Filtered</span>
+                        <DyTree Super={this.props} onPanelClick={this.togglePane} filter={this.state.filter} updateTree={this.handleDataChange}/>
+                    </div>
+            </div>
 
 
-            );
-        }
+        );
+
     }
 }
 export default TreeView;
