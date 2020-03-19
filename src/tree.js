@@ -8,7 +8,7 @@ import * as moment from 'moment'
 import axios from "axios";
 import { Manager, Reference, Popper } from 'react-popper';
 
-
+let count =0;
 
 const StyledAnnotation = ({data,click_handler}) => {
     console.log('iiiin');
@@ -19,14 +19,14 @@ const StyledAnnotation = ({data,click_handler}) => {
     const modify_date = new moment(data.updated).format('DD/MM/YYYY');
     const extra = data.text.length>38 ? "..." : ""
   return (
-      <div className="blurb">
-          <div className="row">
+      <div className="blurb"><div className="row">
               <div className="col-5"><a href={data.links.incontext}>{data.uri}</a></div>
               <div className="col-2">{data.user.substring(5)}</div>
               <div className="col-1">{create_date}</div>
               <div className="col-1">{modify_date}</div>
               <div className="col-3">{data.text.substring(0,38)+ extra }</div>
           </div>
+
       </div>
 
   )
@@ -39,7 +39,7 @@ const GroupedAnnotations = ({ data,click_handler}) => {
   return (
     <div>
         {Object.keys(data).map(key => (
-            <TreeItem onKeyDown={() => click_handler({text: data[key].text,updated: data[key].updated,user:data[key].user,created:data[key].created,uri:data[key].uri})} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
+            <TreeItem  nodeId={'i-'+data[key].id.toString()} onKeyDown={() => click_handler({text: data[key].text,updated: data[key].updated,user:data[key].user,created:data[key].created,uri:data[key].uri})} nodeId={data[key].id} label={<StyledAnnotation data={data[key]} click_handler={click_handler}/>} />
       ))}
 
     </div>
@@ -188,7 +188,8 @@ class DyTree extends React.Component {
               let value = this.state.data[key];
               console.log("here");
               console.log(value);
-                itemList.push(<TreeItem nodeId={'g-'+x.toString()} label={key}><GroupedAnnotations data={value} click_handler={this.handleClick}  /></TreeItem>);
+                itemList.push(<TreeItem nodeId={'g-'+ x.toString()} label={key}><GroupedAnnotations data={value} click_handler={this.handleClick}  /></TreeItem>);
+                x++;
             });
             console.log("array");
             console.log(itemList);

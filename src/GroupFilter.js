@@ -30,7 +30,7 @@ class GroupFilter extends Component{
                         <div className="col-lg-1">
                         </div>
                         <div className="col-lg-4">
-                            <div class="ig1">
+                            <div className="ig1">
                             </div>
                             <div className="ig1">
                             </div>
