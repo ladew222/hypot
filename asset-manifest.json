@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/hypot/static/css/main.1d307188.chunk.css",
-    "main.js": "/hypot/static/js/main.83e1bcc8.chunk.js",
-    "main.js.map": "/hypot/static/js/main.83e1bcc8.chunk.js.map",
+    "main.js": "/hypot/static/js/main.c712bde4.chunk.js",
+    "main.js.map": "/hypot/static/js/main.c712bde4.chunk.js.map",
     "runtime-main.js": "/hypot/static/js/runtime-main.15270ce5.js",
     "runtime-main.js.map": "/hypot/static/js/runtime-main.15270ce5.js.map",
     "static/css/2.b5ccfbbb.chunk.css": "/hypot/static/css/2.b5ccfbbb.chunk.css",
     "static/js/2.0dcf0147.chunk.js": "/hypot/static/js/2.0dcf0147.chunk.js",
     "static/js/2.0dcf0147.chunk.js.map": "/hypot/static/js/2.0dcf0147.chunk.js.map",
     "index.html": "/hypot/index.html",
-    "precache-manifest.f51f98be11853bb3a470c5df5b94e8b1.js": "/hypot/precache-manifest.f51f98be11853bb3a470c5df5b94e8b1.js",
+    "precache-manifest.c8de8f16062931715883903426254ef0.js": "/hypot/precache-manifest.c8de8f16062931715883903426254ef0.js",
     "service-worker.js": "/hypot/service-worker.js",
     "static/css/2.b5ccfbbb.chunk.css.map": "/hypot/static/css/2.b5ccfbbb.chunk.css.map",
     "static/css/main.1d307188.chunk.css.map": "/hypot/static/css/main.1d307188.chunk.css.map"
@@ -19,6 +19,6 @@
     "static/css/2.b5ccfbbb.chunk.css",
     "static/js/2.0dcf0147.chunk.js",
     "static/css/main.1d307188.chunk.css",
-    "static/js/main.83e1bcc8.chunk.js"
+    "static/js/main.c712bde4.chunk.js"
   ]
 }
