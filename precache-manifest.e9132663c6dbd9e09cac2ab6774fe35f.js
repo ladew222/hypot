@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "577ee6d2cd2dcdcb5e9ee405e253960a",
+    "revision": "64f965cdc4327d38b0bfe0a4341f66e7",
     "url": "/hypot/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/hypot/static/css/2.b5ccfbbb.chunk.css"
   },
   {
-    "revision": "30715048c209e95e0c70",
+    "revision": "c03ed3365dbd7e8d20e2",
     "url": "/hypot/static/css/main.1d307188.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/hypot/static/js/2.0dcf0147.chunk.js"
   },
   {
-    "revision": "30715048c209e95e0c70",
-    "url": "/hypot/static/js/main.c712bde4.chunk.js"
+    "revision": "c03ed3365dbd7e8d20e2",
+    "url": "/hypot/static/js/main.1fa07b33.chunk.js"
   },
   {
     "revision": "feb9896eec76f990fb83",
